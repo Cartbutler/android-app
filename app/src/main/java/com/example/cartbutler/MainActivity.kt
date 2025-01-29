@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
                             onSearch = { println("User searched: $searchQuery") },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(start = 20.dp, end = 20.dp) // 🔹 Adds a 0.5 cm margin on both sides
+                                .padding(start = 19.dp, end = 19.dp) // 🔹 Adds a 0.5 cm margin on both sides
                         ) {
                             Text(text = "Type your search here...") // 🔹 More user-friendly placeholder
                         }
