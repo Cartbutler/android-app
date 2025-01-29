@@ -40,3 +40,5 @@ google-services.json
 .gradle/daemon/
 .gradle/native/
 .gradle/wrapper/
+/.gradle
+*.properties
