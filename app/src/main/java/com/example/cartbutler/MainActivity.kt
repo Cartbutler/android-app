@@ -86,8 +86,7 @@ fun CategorySection() {
     ) {
         Text(
             text = stringResource(id = R.string.categories_label),
-            fontSize = 20.sp,
-            modifier = Modifier.padding(bottom = 8.dp)
+            style=MaterialTheme.typography.body1
         )
         for (i in categories.indices step 2) {
             Row(
