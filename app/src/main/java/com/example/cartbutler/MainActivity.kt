@@ -16,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,7 +55,7 @@ class MainActivity : ComponentActivity() {
                                 .padding(horizontal = 20.dp),
                             placeholder = {
                                 Text(
-                                    text = "Search products, stores...",
+                                    text = stringResource(id = R.string.search),
                                     color = MaterialTheme.colorScheme.onSurface,
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Normal,
@@ -83,7 +84,11 @@ fun CategorySection() {
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Categories", fontSize = 20.sp, modifier = Modifier.padding(bottom = 8.dp))
+        Text(
+            text = stringResource(id = R.string.categories_label),
+            fontSize = 20.sp,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
         for (i in categories.indices step 2) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
