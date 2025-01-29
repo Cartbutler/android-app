@@ -9,11 +9,15 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,24 +34,36 @@ class MainActivity : ComponentActivity() {
                     Column(
                         modifier = Modifier.padding(innerPadding)
                     ) {
-                        var isSearchActive by remember { mutableStateOf(false) }
                         var searchQuery by remember { mutableStateOf("") }
 
                         SearchBar(
                             query = searchQuery,
                             onQueryChange = { searchQuery = it },
-                            active = isSearchActive,
-                            onActiveChange = { isSearchActive = it },
+                            active = false,
+                            onActiveChange = {},
                             onSearch = { println("User searched: $searchQuery") },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Search,
+                                    contentDescription = "Search Icon",
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 19.dp)
-                        ) {
-                            Text(text = "Type your search here...")
-                        }
+                                .padding(horizontal = 20.dp),
+                            placeholder = {
+                                Text(
+                                    text = "Search products, stores...",
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    textAlign = TextAlign.Start
+                                )
+                            }
+                        ) {}
 
                         Spacer(modifier = Modifier.height(16.dp))
-
                         CategorySection()
                     }
                 }
@@ -69,7 +85,10 @@ fun CategorySection() {
     ) {
         Text(text = "Categories", fontSize = 20.sp, modifier = Modifier.padding(bottom = 8.dp))
         for (i in categories.indices step 2) {
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
                 CategoryItem(categories[i]) { println("Navigating to ${categories[i]}") }
                 if (i + 1 < categories.size) {
                     CategoryItem(categories[i + 1]) { println("Navigating to ${categories[i + 1]}") }
@@ -83,7 +102,7 @@ fun CategorySection() {
 fun CategoryItem(name: String, onClick: () -> Unit) {
     Box(
         modifier = Modifier
-            .size(200.dp)
+            .size(180.dp)
             .clickable { onClick() }
             .padding(4.dp),
         contentAlignment = Alignment.Center
@@ -104,6 +123,9 @@ fun CategoryItem(name: String, onClick: () -> Unit) {
 @Composable
 fun PreviewCategorySection() {
     CartbutlerTheme {
-        CategorySection()
+        Column {
+            Spacer(modifier = Modifier.height(16.dp))
+            CategorySection()
+        }
     }
 }
