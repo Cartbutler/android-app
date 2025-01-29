@@ -1,6 +1,8 @@
 # Gradle files
 .gradle/
 build/
+**/.gradle/
+**/build/
 
 # Local configuration file (sdk path, etc)
 local.properties
@@ -18,6 +20,7 @@ output.json
 # IntelliJ
 *.iml
 .idea/
+**/.idea/
 misc.xml
 deploymentTargetDropDown.xml
 render.experimental.xml
@@ -31,3 +34,9 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+# Ignore Gradle caches and temporary files
+.gradle/caches/
+.gradle/daemon/
+.gradle/native/
+.gradle/wrapper/
