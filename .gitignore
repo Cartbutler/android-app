@@ -59,3 +59,4 @@ google-services.json
 /.idea
 /.gradle
 .gradle/8.10.2/executionHistory/executionHistory.lock
+.gradle/8.10.2/executionHistory/executionHistory.bin
