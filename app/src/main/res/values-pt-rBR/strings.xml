@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Cartbutler</string>
+    <string name="categories_label">Categorias</string>
+    <string name="search">Procurar produtos, categorias...</string>
+</resources>

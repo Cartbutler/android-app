@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">Cartbutler</string>
+    <string name="app_name" translatable="false">Cartbutler</string>
+    <string name="categories_label">Categories</string>
+    <string name="search">Search products, categories...</string>
 </resources>
