@@ -40,14 +40,14 @@ google-services.json
 .gradle/daemon/
 .gradle/native/
 .gradle/wrapper/
-/.gradle
+.gradle
 *.properties
 .gradle/config.properties
 /.gradle
 /.gradle/8.10.2
 /.gradle/8.10.2/fileHashes
 /wrapper
-/.idea
+.idea
 /caches
 /daemon
 /native
