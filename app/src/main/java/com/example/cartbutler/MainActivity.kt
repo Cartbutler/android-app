@@ -41,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.cartbutler.ui.theme.CartbutlerTheme
@@ -104,7 +105,7 @@ fun SearchWithDropdown(
                 .height(56.dp)
                 .focusRequester(focusRequester),
             shape = RoundedCornerShape(50.dp),
-            placeholder = { Text("Search products...") },
+            placeholder = { Text(stringResource(R.string.search)) },
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search Icon") },
             trailingIcon = {
                 if (searchQuery.isNotEmpty()) {
@@ -163,7 +164,7 @@ fun CategorySection() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Categories",
+            text = stringResource(id = R.string.categories_label),
             style = MaterialTheme.typography.bodyMedium
         )
         for (i in categories.indices step 2) {
