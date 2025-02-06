@@ -1,15 +1,12 @@
-# Gradle files
-build/
-**/.gradle/
-**/build/
-
 # Local configuration file (sdk path, etc)
 local.properties
+.DS_Store
 
 # Log/OS Files
 *.log
 
 # Android Studio generated files and folders
+.kotlin
 captures/
 .externalNativeBuild/
 .cxx/
@@ -19,6 +16,8 @@ output.json
 # IntelliJ
 *.iml
 **/.idea/
+.idea
+/.idea
 misc.xml
 deploymentTargetDropDown.xml
 render.experimental.xml
@@ -34,24 +33,17 @@ google-services.json
 *.hprof
 
 # Ignore Gradle caches and temporary files
-.gradle/caches/
-.gradle/daemon/
-.gradle/native/
-.gradle/wrapper/
+build/
+**/.gradle/
+**/build/
+gradlew
+gradle.bat
 .gradle
-*.properties
-.gradle/config.properties
 /.gradle
-/.gradle/8.10.2
-/.gradle/8.10.2/fileHashes
-/wrapper
-.idea
+gradle/wrapper
 /caches
 /daemon
 /native
 /.tmp
 /kotlin-profile
-/.idea
 /android
-.gradle/8.10.2/executionHistory/executionHistory.lock
-.gradle/8.10.2/executionHistory/executionHistory.bin
