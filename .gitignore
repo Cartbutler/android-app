@@ -37,10 +37,10 @@ build/
 **/.gradle/
 **/build/
 gradlew
-gradle.bat
+gradlew.bat
 .gradle
 /.gradle
-gradle/wrapper
+gradle/wrapper/gradle-wrapper.jar
 /caches
 /daemon
 /native
