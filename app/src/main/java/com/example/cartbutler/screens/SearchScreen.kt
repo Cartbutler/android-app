@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.cartbutler.R
 
@@ -36,7 +35,7 @@ fun SearchScreen(product: String, navController: NavController) {
             Text(
                 text = stringResource(id = R.string.searchingFor, product),
                 color = MaterialTheme.colorScheme.onBackground,
-                fontSize = 24.sp,
+                style = MaterialTheme.typography.titleLarge,
                 textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.height(16.dp))

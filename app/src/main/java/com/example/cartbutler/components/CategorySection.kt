@@ -1,13 +1,5 @@
 package com.example.cartbutler.components
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,6 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.cartbutler.R
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.*
 
 /**
  * Displays a section of categories arranged in rows.
@@ -31,29 +25,28 @@ fun CategorySection() {
     Column(
         modifier = Modifier
             .padding(16.dp)
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Header text for the categories section
         Text(
             text = stringResource(id = R.string.categories_label),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.primary
         )
-        // Arrange categories two per row
-        for (i in categories.indices step 2) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                CategoryItem(categories[i]) {
-                    println("Navigating to ${categories[i]}")
-                }
-                if (i + 1 < categories.size) {
-                    CategoryItem(categories[i + 1]) {
-                        println("Navigating to ${categories[i + 1]}")
-                    }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Apply 2 items per row using LazyVerticalGrid
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(categories) { category ->
+                CategoryItem(category) {
+                    println("Navigating to $category")
                 }
             }
         }

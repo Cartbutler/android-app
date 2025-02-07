@@ -17,7 +17,7 @@ import com.example.cartbutler.components.AppFooter
 import com.example.cartbutler.screens.HomePage
 import com.example.cartbutler.screens.CartScreen
 import com.example.cartbutler.screens.SearchScreen
-import com.example.cartbutler.ui.screens.ProfileScreen
+import com.example.cartbutler.screens.ProfileScreen
 import com.example.cartbutler.ui.theme.CartbutlerTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,10 +45,10 @@ class MainActivity : ComponentActivity() {
                             HomePage(navController = navController)
                         }
                         composable("cart") {
-                            CartScreen(navController = navController)
+                            CartScreen()
                         }
                         composable("profile") {
-                            ProfileScreen(navController = navController)
+                            ProfileScreen()
                         }
                         composable("search/{product}") { backStackEntry ->
                             val product = backStackEntry.arguments?.getString("product") ?: ""

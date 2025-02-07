@@ -17,7 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.cartbutler.ui.theme.BorderDark
 import com.example.cartbutler.ui.theme.BorderLight
 
@@ -53,7 +52,7 @@ fun CategoryItem(name: String, onClick: () -> Unit) {
             ) {
                 Text(
                     text = name,
-                    fontSize = 16.sp,
+                    style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onSurface
                 )
             }
