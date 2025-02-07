@@ -1,12 +1,13 @@
 @file:Suppress("DEPRECATION")
 
-package com.example.cartbutler.ui.components
+package com.example.cartbutler.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
@@ -59,7 +60,7 @@ fun SearchWithDropdown(
                 .fillMaxWidth()
                 .height(56.dp)
                 .focusRequester(focusRequester),
-            shape = androidx.compose.foundation.shape.RoundedCornerShape(50.dp),
+            shape = RoundedCornerShape(50.dp),
             placeholder = { Text(stringResource(R.string.search)) },
             leadingIcon = {
                 Icon(Icons.Default.Search, contentDescription = "Search Icon")

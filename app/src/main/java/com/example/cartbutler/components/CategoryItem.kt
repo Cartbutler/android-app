@@ -1,4 +1,4 @@
-package com.example.cartbutler.ui.components
+package com.example.cartbutler.components
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable

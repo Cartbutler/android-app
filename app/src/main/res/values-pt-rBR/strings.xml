@@ -3,4 +3,5 @@
     <string name="app_name">Cartbutler</string>
     <string name="categories_label">Categorias</string>
     <string name="search">Procurar produtos, categorias...</string>
+    <string name="searchingFor">Procurando por %1$s</string>
 </resources>

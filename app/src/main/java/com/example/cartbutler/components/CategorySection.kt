@@ -1,4 +1,4 @@
-package com.example.cartbutler.ui.components
+package com.example.cartbutler.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

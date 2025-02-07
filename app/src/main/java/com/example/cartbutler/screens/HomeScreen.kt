@@ -1,20 +1,22 @@
-package com.example.cartbutler.ui.screens
+package com.example.cartbutler.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.cartbutler.ui.components.CategorySection
-import com.example.cartbutler.ui.components.SearchWithDropdown
+import androidx.navigation.NavController
+import com.example.cartbutler.components.CategorySection
+import com.example.cartbutler.components.SearchWithDropdown
 
-@androidx.compose.material3.ExperimentalMaterial3Api
+@ExperimentalMaterial3Api
 @Composable
-fun HomePage() {
+fun HomePage(navController: NavController) {
     var searchQuery by remember { mutableStateOf("") }
     val allProducts = listOf("Apple", "Banana", "Carrot", "Milk", "Bread", "Cheese", "Coca-Cola", "Pizza")
     val filteredProducts = remember(searchQuery) {
@@ -30,7 +32,9 @@ fun HomePage() {
                     searchQuery = searchQuery,
                     onSearchQueryChange = { searchQuery = it },
                     filteredProducts = filteredProducts,
-                    onProductSelected = { searchQuery = it }
+                    onProductSelected = { product ->
+                        navController.navigate("search/$product")
+                    }
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 CategorySection()
