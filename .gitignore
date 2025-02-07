@@ -47,3 +47,4 @@ gradle/wrapper/gradle-wrapper.jar
 /.tmp
 /kotlin-profile
 /android
+/wrapper/dists
