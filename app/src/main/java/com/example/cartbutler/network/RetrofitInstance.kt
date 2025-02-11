@@ -10,7 +10,6 @@ object RetrofitInstance {
 
     private val gson = GsonBuilder()
         .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-        .setDateFormat("yyyy-MM-dd")
         .create()
 
     val api: ApiService by lazy {
