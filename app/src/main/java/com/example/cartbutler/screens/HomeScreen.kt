@@ -10,13 +10,18 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.cartbutler.components.CategorySection
 import com.example.cartbutler.components.SearchWithDropdown
+import com.example.cartbutler.viewmodel.CategoryViewModel
 
 @ExperimentalMaterial3Api
 @Composable
 fun HomePage(navController: NavController) {
+    val categoryViewModel: CategoryViewModel = viewModel()
+    val categories = categoryViewModel.categories
+
     var searchQuery by remember { mutableStateOf("") }
     val allProducts = listOf("Apple", "Banana", "Carrot", "Milk", "Bread", "Cheese", "Coca-Cola", "Pizza")
     val filteredProducts = remember(searchQuery) {
@@ -37,7 +42,13 @@ fun HomePage(navController: NavController) {
                     }
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                CategorySection()
+                CategorySection(
+                    categories = categories,
+                    onCategoryClick = { category ->
+                        println("Navigating to category: ${category.categoryName}")
+                        navController.navigate("category/${category.categoryId}")
+                    }
+                )
             }
         }
     )
