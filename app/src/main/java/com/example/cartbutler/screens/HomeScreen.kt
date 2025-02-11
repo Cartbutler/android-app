@@ -45,8 +45,8 @@ fun HomePage(navController: NavController) {
                 CategorySection(
                     categories = categories,
                     onCategoryClick = { category ->
-                        println("Navigating to category: ${category.category_name}")
-                        navController.navigate("category/${category.category_id}")
+                        println("Navigating to category: ${category.categoryName}")
+                        navController.navigate("category/${category.categoryId}")
                     }
                 )
             }

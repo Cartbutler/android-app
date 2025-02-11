@@ -48,7 +48,7 @@ fun CategorySection(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(categories) { category ->
-                CategoryItem(category.category_name) {
+                CategoryItem(category.categoryName) {
                     onCategoryClick(category)
                 }
             }
