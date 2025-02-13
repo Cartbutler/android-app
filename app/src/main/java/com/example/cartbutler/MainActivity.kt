@@ -16,7 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.cartbutler.components.AppFooter
 import com.example.cartbutler.screens.HomePage
 import com.example.cartbutler.screens.CartScreen
-import com.example.cartbutler.screens.SearchScreen
+import com.example.cartbutler.screens.ProductScreen
 import com.example.cartbutler.screens.ProfileScreen
 import com.example.cartbutler.ui.theme.CartbutlerTheme
 
@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("search/{product}") { backStackEntry ->
                             val product = backStackEntry.arguments?.getString("product") ?: ""
-                            SearchScreen(product = product, navController = navController)
+                            ProductScreen(product = product, navController = navController)
                         }
                     }
                 }
