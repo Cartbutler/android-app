@@ -13,16 +13,13 @@ import com.example.cartbutler.components.SearchWithDropdown
 import com.example.cartbutler.network.RetrofitInstance
 import com.example.cartbutler.viewmodel.CategoryViewModel
 import com.example.cartbutler.viewmodel.ProductSuggestionViewModel
-import com.example.cartbutler.viewmodel.factory.ProductSuggestionViewModelFactory
 
 @ExperimentalMaterial3Api
 @Composable
 fun HomePage(navController: NavController) {
     val apiService = RetrofitInstance.api
 
-    val productSuggestionViewModel: ProductSuggestionViewModel = viewModel(
-        factory = ProductSuggestionViewModelFactory(apiService)
-    )
+    val productSuggestionViewModel: ProductSuggestionViewModel = ProductSuggestionViewModel(apiService)
 
     val categoryViewModel: CategoryViewModel = viewModel()
     val categories = categoryViewModel.categories
