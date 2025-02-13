@@ -19,7 +19,7 @@ import com.example.cartbutler.viewmodel.ProductSuggestionViewModel
 fun HomePage(navController: NavController) {
     val apiService = RetrofitInstance.api
 
-    val productSuggestionViewModel: ProductSuggestionViewModel = ProductSuggestionViewModel(apiService)
+    val productSuggestionViewModel = ProductSuggestionViewModel(apiService)
 
     val categoryViewModel: CategoryViewModel = viewModel()
     val categories = categoryViewModel.categories
