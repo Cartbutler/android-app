@@ -4,4 +4,5 @@
     <string name="search">Search products, categories…</string>
     <string name="searchingFor">Searching for %1$s</string>
     <string name="go_back">Back</string>
+    <string name="product_details">Product details:</string>
 </resources>
