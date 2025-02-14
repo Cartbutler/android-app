@@ -44,7 +44,7 @@ fun SearchWithDropdown(
     searchQuery: String,
     onSearchQueryChange: (String) -> Unit,
     filteredProducts: List<String>,
-    onProductSelected: (String) -> Unit,
+    onSuggestionSelected: (String) -> Unit,
     onSearchConfirmed: (String) -> Unit
 ) {
     var isDropdownExpanded by remember { mutableStateOf(false) }
@@ -97,14 +97,14 @@ fun SearchWithDropdown(
                     .padding(top = 4.dp)
             ) {
                 Column {
-                    filteredProducts.forEach { product ->
+                    filteredProducts.forEach { suggestion ->
                         Text(
-                            text = product,
+                            text = suggestion,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(8.dp)
                                 .clickable {
-                                    onProductSelected(product)
+                                    onSuggestionSelected(suggestion)
                                     isDropdownExpanded = false
                                     focusRequester.requestFocus()
                                 },

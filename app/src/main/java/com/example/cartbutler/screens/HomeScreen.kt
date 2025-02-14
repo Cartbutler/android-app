@@ -37,10 +37,10 @@ fun HomePage(navController: NavController) {
                     searchQuery = searchQuery,
                     onSearchQueryChange = { searchQuery = it },
                     filteredProducts = suggestions.map { it.name },
-                    onProductSelected = { product ->
-                        val selectedProduct = suggestions.find { it.name == product }
-                        selectedProduct?.let {
-                            navController.navigate("product/${it.name}")
+                    onSuggestionSelected = { query ->
+                        searchQuery = query
+                        if (query.isNotBlank()) {
+                            navController.navigate("search/$query")
                         }
                     },
                     onSearchConfirmed = { query ->
