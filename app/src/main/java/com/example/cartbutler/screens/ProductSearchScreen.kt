@@ -57,9 +57,17 @@ fun ProductSearchScreen(navController: NavController, searchQuery: String) {
                 isLoading -> {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
+                searchQuery.isBlank() -> {
+                    Text(
+                        text = "Please enter a search term",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
                 products.isEmpty() -> {
                     Text(
                         text = "No products with \"$searchQuery\"",
+                        style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
