@@ -83,6 +83,7 @@ fun ProductSearchScreen(navController: NavController, searchQuery: String) {
                                 ProductItem(
                                     productName = product.productName,
                                     price = "%.2f".format(product.price),
+                                    imageUrl = product.imagePath,
                                     onClick = {
                                         navController.navigate("product/${product.productName}")
                                     }
