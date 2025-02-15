@@ -32,6 +32,7 @@ fun ProductSearchScreen(navController: NavController, searchQuery: String) {
 
     val products by viewModel.searchResults.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+    val error by viewModel.error.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
@@ -57,12 +58,22 @@ fun ProductSearchScreen(navController: NavController, searchQuery: String) {
                 isLoading -> {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
-                searchQuery.isBlank() -> {
-                    Text(
-                        text = "Please enter a search term",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.align(Alignment.Center)
-                    )
+                error != null -> {
+                    Column(
+                        modifier = Modifier.align(Alignment.Center),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = error!!,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                        Button(
+                            onClick = { viewModel.retrySearch() },
+                            modifier = Modifier.padding(top = 8.dp)
+                        ) {
+                            Text("Try Again")
+                        }
+                    }
                 }
                 products.isEmpty() -> {
                     Text(
