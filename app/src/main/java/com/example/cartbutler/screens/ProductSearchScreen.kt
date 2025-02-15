@@ -68,7 +68,7 @@ fun ProductSearchScreen(navController: NavController, searchQuery: String) {
                             color = MaterialTheme.colorScheme.error
                         )
                         Button(
-                            onClick = { viewModel.retrySearch() },
+                            onClick = { viewModel.searchProducts(searchQuery) },
                             modifier = Modifier.padding(top = 8.dp)
                         ) {
                             Text("Try Again")
