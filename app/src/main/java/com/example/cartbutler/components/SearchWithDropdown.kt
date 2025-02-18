@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package com.example.cartbutler.components
 
 import androidx.compose.foundation.clickable
@@ -28,6 +26,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.unit.dp
 import com.example.cartbutler.R
 
@@ -43,7 +44,8 @@ fun SearchWithDropdown(
     searchQuery: String,
     onSearchQueryChange: (String) -> Unit,
     filteredProducts: List<String>,
-    onProductSelected: (String) -> Unit
+    onSuggestionSelected: (String) -> Unit,
+    onSearchConfirmed: (String) -> Unit
 ) {
     var isDropdownExpanded by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
@@ -74,7 +76,13 @@ fun SearchWithDropdown(
                     }
                 }
             },
-
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+            keyboardActions = KeyboardActions(
+                onSearch = {
+                    onSearchConfirmed(searchQuery)
+                    isDropdownExpanded = false
+                }
+            ),
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
@@ -89,14 +97,14 @@ fun SearchWithDropdown(
                     .padding(top = 4.dp)
             ) {
                 Column {
-                    filteredProducts.forEach { product ->
+                    filteredProducts.forEach { suggestion ->
                         Text(
-                            text = product,
+                            text = suggestion,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(8.dp)
                                 .clickable {
-                                    onProductSelected(product)
+                                    onSuggestionSelected(suggestion)
                                     isDropdownExpanded = false
                                     focusRequester.requestFocus()
                                 },

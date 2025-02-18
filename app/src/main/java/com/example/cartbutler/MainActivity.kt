@@ -16,9 +16,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.cartbutler.components.AppFooter
 import com.example.cartbutler.screens.HomePage
 import com.example.cartbutler.screens.CartScreen
-import com.example.cartbutler.screens.SearchScreen
+import com.example.cartbutler.screens.ProductScreen
 import com.example.cartbutler.screens.ProfileScreen
 import com.example.cartbutler.ui.theme.CartbutlerTheme
+import com.example.cartbutler.screens.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : ComponentActivity() {
@@ -50,9 +51,16 @@ class MainActivity : ComponentActivity() {
                         composable("profile") {
                             ProfileScreen()
                         }
-                        composable("search/{product}") { backStackEntry ->
-                            val product = backStackEntry.arguments?.getString("product") ?: ""
-                            SearchScreen(product = product, navController = navController)
+                        composable("search/{query}") { backStackEntry ->
+                            val query = backStackEntry.arguments?.getString("query") ?: ""
+                            ProductSearchScreen(navController = navController, searchQuery = query)
+                        }
+                        composable("product/{productName}") { backStackEntry ->
+                            val productName = backStackEntry.arguments?.getString("productName") ?: ""
+                            ProductScreen(
+                                productName = productName,
+                                navController = navController
+                            )
                         }
                     }
                 }

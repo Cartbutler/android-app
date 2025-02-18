@@ -18,9 +18,7 @@ import com.example.cartbutler.viewmodel.ProductSuggestionViewModel
 @Composable
 fun HomePage(navController: NavController) {
     val apiService = RetrofitInstance.api
-
     val productSuggestionViewModel = ProductSuggestionViewModel(apiService)
-
     val categoryViewModel: CategoryViewModel = viewModel()
     val categories = categoryViewModel.categories
 
@@ -39,15 +37,20 @@ fun HomePage(navController: NavController) {
                     searchQuery = searchQuery,
                     onSearchQueryChange = { searchQuery = it },
                     filteredProducts = suggestions.map { it.name },
-                    onProductSelected = { product ->
-                        navController.navigate("search/$product")
+                    onSuggestionSelected = { query ->
+                        searchQuery = query
+                        navController.navigate("search/$query")
+                    },
+                    onSearchConfirmed = { query ->
+                        if (query.isNotBlank()) {
+                            navController.navigate("search/$query")
+                        }
                     }
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 CategorySection(
                     categories = categories,
                     onCategoryClick = { category ->
-                        println("Navigating to category: ${category.categoryName}")
                         navController.navigate("category/${category.categoryId}")
                     }
                 )

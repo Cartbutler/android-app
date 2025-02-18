@@ -5,4 +5,5 @@
     <string name="search">Procurar produtos, categorias…</string>
     <string name="searchingFor">Procurando por %1$s</string>
     <string name="go_back">Voltar</string>
+    <string name="product_details">Detalhes do produto:</string>
 </resources>
