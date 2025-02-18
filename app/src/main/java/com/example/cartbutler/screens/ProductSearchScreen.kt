@@ -25,9 +25,7 @@ fun ProductSearchScreen(navController: NavController, searchQuery: String) {
     val viewModel: ProductSearchViewModel = viewModel()
 
     LaunchedEffect(searchQuery) {
-        if (searchQuery.isNotBlank()) {
-            viewModel.searchProducts(searchQuery)
-        }
+        viewModel.searchProducts(searchQuery)
     }
 
     val products by viewModel.searchResults.collectAsStateWithLifecycle()
@@ -37,7 +35,7 @@ fun ProductSearchScreen(navController: NavController, searchQuery: String) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Search results") },
+                title = { Text("Searching for \"$searchQuery\"") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(

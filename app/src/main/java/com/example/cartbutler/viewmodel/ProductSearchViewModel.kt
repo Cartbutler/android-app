@@ -27,8 +27,6 @@ class ProductSearchViewModel : ViewModel() {
             _isLoading.value = true
             _error.value = null
             try {
-                // force error for testing
-                //throw Exception("Simulated error")
                 _searchResults.value = apiService.searchProducts(query = query, categoryID = null)
             } catch (e: Exception) {
                 _error.value = "Failed to load results. Please try again."

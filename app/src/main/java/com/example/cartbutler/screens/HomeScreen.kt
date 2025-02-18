@@ -39,9 +39,7 @@ fun HomePage(navController: NavController) {
                     filteredProducts = suggestions.map { it.name },
                     onSuggestionSelected = { query ->
                         searchQuery = query
-                        if (query.isNotBlank()) {
-                            navController.navigate("search/$query")
-                        }
+                        navController.navigate("search/$query")
                     },
                     onSearchConfirmed = { query ->
                         if (query.isNotBlank()) {
