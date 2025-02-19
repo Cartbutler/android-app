@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Icon
 import com.example.cartbutler.R
+import com.example.cartbutler.components.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -105,7 +106,7 @@ private fun ProductDetailsContent(product: Product) {
         Spacer(Modifier.height(8.dp))
 
         Text(
-            text = "$${"%.2f".format(product.price)}",
+            text = formatCurrency(product.price),
             style = MaterialTheme.typography.titleLarge.copy(
                 fontWeight = FontWeight.Bold
             ),
