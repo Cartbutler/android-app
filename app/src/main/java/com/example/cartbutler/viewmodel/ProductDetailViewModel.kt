@@ -2,14 +2,14 @@ package com.example.cartbutler.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cartbutler.network.ApiService
 import com.example.cartbutler.network.Product
+import com.example.cartbutler.network.RetrofitInstance
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class ProductDetailViewModel(
-    private val apiService: ApiService
+    private val apiService: com.example.cartbutler.network.ApiService = RetrofitInstance.api
 ) : ViewModel() {
 
     private val _product = MutableStateFlow<Product?>(null)
