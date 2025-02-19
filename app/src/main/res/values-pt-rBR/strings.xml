@@ -8,4 +8,6 @@
     <string name="product_details">Detalhes do produto:</string>
     <string name="cart_icon_desc">Ícone de carrinho</string>
     <string name="add_to_cart">Adicionar ao carrinho</string>
+    <string name="Details">Details</string>
+    <string name="back_button">Voltar</string>
 </resources>

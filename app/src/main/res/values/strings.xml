@@ -7,4 +7,6 @@
     <string name="product_details">Product details:</string>
     <string name="cart_icon_desc">cart icon</string>
     <string name="add_to_cart">Add to cart</string>
+    <string name="Details">Details</string>
+    <string name="back_button">Back</string>
 </resources>
