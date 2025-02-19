@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package com.example.cartbutler.components
 
 import androidx.compose.foundation.clickable

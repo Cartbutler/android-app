@@ -54,13 +54,6 @@ class MainActivity : ComponentActivity() {
                             val query = backStackEntry.arguments?.getString("query") ?: ""
                             ProductSearchScreen(navController = navController, searchQuery = query)
                         }
-                        composable("product/{productId}") { backStackEntry ->
-                            val productId = backStackEntry.arguments?.getString("productId")?.toIntOrNull()
-                            ProductDetailScreen(
-                                navController = navController,
-                                productId = productId
-                            )
-                        }
                         composable("productDetail/{productId}") { backStackEntry ->
                             val productId = backStackEntry.arguments?.getString("productId")?.toIntOrNull()
                             ProductDetailScreen(navController, productId)
