@@ -2,6 +2,7 @@ package com.example.cartbutler.network
 
 import retrofit2.http.GET
 import retrofit2.http.Query
+import retrofit2.http.Path
 
 interface ApiService {
 
@@ -21,4 +22,8 @@ interface ApiService {
         @Query("query") query: String?,
         @Query("categoryID") categoryID: Int? = null
     ): List<Product>
+
+    // Return single product
+    @GET("products/{productId}")
+    suspend fun getProductById(@Path("productId") productId: Int): Product
 }
