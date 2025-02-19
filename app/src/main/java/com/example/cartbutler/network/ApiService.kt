@@ -21,4 +21,8 @@ interface ApiService {
         @Query("query") query: String?,
         @Query("categoryID") categoryID: Int? = null
     ): List<Product>
+
+    // Return single product
+    @GET("product")
+    suspend fun getProductById(@Query("id") productId: Int): Product
 }
