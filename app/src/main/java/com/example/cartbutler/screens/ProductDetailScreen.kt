@@ -2,6 +2,7 @@ package com.example.cartbutler.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.ui.res.stringResource
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -17,6 +18,15 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.cartbutler.network.Product
 import com.example.cartbutler.viewmodel.ProductDetailViewModel
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.Icon
+import com.example.cartbutler.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -87,14 +97,18 @@ private fun ProductDetailsContent(product: Product) {
 
         Text(
             text = product.productName,
-            style = MaterialTheme.typography.headlineMedium
+            style = MaterialTheme.typography.headlineMedium.copy(
+                fontWeight = FontWeight.Bold
+            )
         )
 
         Spacer(Modifier.height(8.dp))
 
         Text(
-            text = "$${product.price}",
-            style = MaterialTheme.typography.titleLarge,
+            text = "$${"%.2f".format(product.price)}",
+            style = MaterialTheme.typography.titleLarge.copy(
+                fontWeight = FontWeight.Bold
+            ),
             color = MaterialTheme.colorScheme.primary
         )
 
@@ -111,9 +125,33 @@ private fun ProductDetailsContent(product: Product) {
             onClick = { /* TODO: CREATE ADDTOCART FUNCTION */ },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 16.dp)
+                .heightIn(min = 56.dp)
+                .padding(vertical = 8.dp),
+            shape = MaterialTheme.shapes.medium,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            )
         ) {
-            Text("Add to cart")
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ShoppingCart,
+                    contentDescription = stringResource(R.string.cart_icon_desc),
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    text = stringResource(R.string.add_to_cart),
+                    style = MaterialTheme.typography.labelLarge.copy(
+                        fontWeight = FontWeight.Bold
+                    ),
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+            }
         }
     }
 }
