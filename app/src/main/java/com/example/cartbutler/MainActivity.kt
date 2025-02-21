@@ -62,6 +62,12 @@ class MainActivity : ComponentActivity() {
                                 navController = navController
                             )
                         }
+                        composable("categoryProducts/{categoryId}") { backStackEntry ->
+                            val categoryId = backStackEntry.arguments?.getString("categoryId")?.toIntOrNull()
+                            if (categoryId != null) {
+                                CategoryProductsScreen(navController = navController, categoryId = categoryId)
+                            }
+                        }
                     }
                 }
             }
