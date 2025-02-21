@@ -10,4 +10,6 @@
     <string name="add_to_cart">Adicionar ao carrinho</string>
     <string name="Details">Detalhes</string>
     <string name="back_button">Voltar</string>
+    <string name="category_default">Categoria</string>
+    <string name="no_products_found">Nenhum produto encontrado\n</string>
 </resources>
