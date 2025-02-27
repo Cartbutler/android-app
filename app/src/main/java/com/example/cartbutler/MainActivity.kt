@@ -19,7 +19,8 @@ import com.example.cartbutler.screens.CartScreen
 import com.example.cartbutler.screens.ProductScreen
 import com.example.cartbutler.screens.ProfileScreen
 import com.example.cartbutler.ui.theme.CartbutlerTheme
-import com.example.cartbutler.screens.*
+import com.example.cartbutler.screens.ProductSearchScreen
+import com.example.cartbutler.screens.ProductDetailScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : ComponentActivity() {
@@ -53,7 +54,19 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("search/{query}") { backStackEntry ->
                             val query = backStackEntry.arguments?.getString("query") ?: ""
-                            ProductSearchScreen(navController = navController, searchQuery = query)
+                            ProductSearchScreen(
+                                navController = navController,
+                                searchQuery = query,
+                                categoryId = null
+                            )
+                        }
+                        composable("categoryProducts/{categoryId}") { backStackEntry ->
+                            val categoryId = backStackEntry.arguments?.getString("categoryId")?.toIntOrNull()
+                            ProductSearchScreen(
+                                navController = navController,
+                                searchQuery = null,
+                                categoryId = categoryId
+                            )
                         }
                         composable("product/{productName}") { backStackEntry ->
                             val productName = backStackEntry.arguments?.getString("productName") ?: ""
@@ -61,12 +74,6 @@ class MainActivity : ComponentActivity() {
                                 productName = productName,
                                 navController = navController
                             )
-                        }
-                        composable("categoryProducts/{categoryId}") { backStackEntry ->
-                            val categoryId = backStackEntry.arguments?.getString("categoryId")?.toIntOrNull()
-                            if (categoryId != null) {
-                                CategoryProductsScreen(navController = navController, categoryId = categoryId)
-                            }
                         }
                     }
                 }
