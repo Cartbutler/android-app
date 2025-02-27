@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.cartbutler.components.ProductItem
+import com.example.cartbutler.components.formatCurrency
 import com.example.cartbutler.viewmodel.ProductSearchViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -99,10 +100,10 @@ fun ProductSearchScreen(navController: NavController, searchQuery: String) {
                             items(products) { product ->
                                 ProductItem(
                                     productName = product.productName,
-                                    price = "%.2f".format(product.price),
+                                    price = formatCurrency(product.price),
                                     imageUrl = product.imagePath,
                                     onClick = {
-                                        navController.navigate("product/${product.productName}")
+                                        navController.navigate("productDetail/${product.productId}")
                                     }
                                 )
                             }
