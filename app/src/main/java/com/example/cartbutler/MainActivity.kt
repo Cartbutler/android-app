@@ -16,7 +16,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.cartbutler.components.AppFooter
 import com.example.cartbutler.screens.HomePage
 import com.example.cartbutler.screens.CartScreen
-import com.example.cartbutler.screens.ProductScreen
 import com.example.cartbutler.screens.ProfileScreen
 import com.example.cartbutler.ui.theme.CartbutlerTheme
 import com.example.cartbutler.screens.ProductSearchScreen
@@ -68,12 +67,9 @@ class MainActivity : ComponentActivity() {
                                 categoryId = categoryId
                             )
                         }
-                        composable("product/{productName}") { backStackEntry ->
-                            val productName = backStackEntry.arguments?.getString("productName") ?: ""
-                            ProductScreen(
-                                productName = productName,
-                                navController = navController
-                            )
+                        composable("productDetail/{productId}") { backStackEntry ->
+                            val productId = backStackEntry.arguments?.getString("productId")?.toIntOrNull()
+                            ProductDetailScreen(navController, productId)
                         }
                     }
                 }
