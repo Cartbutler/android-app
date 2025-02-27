@@ -1,7 +1,4 @@
-package com.example.cartbutler.network
-
-import com.example.cartbutler.network.networkModels.ProductStore
-import com.example.cartbutler.network.networkModels.Store
+package com.example.cartbutler.network.networkModels
 
 data class Product(
     val productId: Int,

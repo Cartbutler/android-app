@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.cartbutler.network.Product
+import com.example.cartbutler.network.networkModels.Product
 import com.example.cartbutler.viewmodel.ProductDetailViewModel
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.foundation.layout.Row
@@ -27,7 +27,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Icon
 import com.example.cartbutler.R
-import com.example.cartbutler.components.*
+import com.example.cartbutler.components.formatCurrency
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

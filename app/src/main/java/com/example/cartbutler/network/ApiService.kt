@@ -1,6 +1,7 @@
 package com.example.cartbutler.network
 
 import com.example.cartbutler.network.networkModels.Category
+import com.example.cartbutler.network.networkModels.Product
 import retrofit2.http.GET
 import retrofit2.http.Query
 

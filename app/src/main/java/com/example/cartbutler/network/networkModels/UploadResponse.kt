@@ -1,4 +1,4 @@
-package com.example.cartbutler.network
+package com.example.cartbutler.network.networkModels
 
 data class UploadResponse(
     val originalUrl: String,

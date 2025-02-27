@@ -2,7 +2,7 @@ package com.example.cartbutler.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cartbutler.network.Product
+import com.example.cartbutler.network.networkModels.Product
 import com.example.cartbutler.network.RetrofitInstance
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

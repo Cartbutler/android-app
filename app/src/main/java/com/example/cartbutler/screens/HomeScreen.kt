@@ -11,7 +11,6 @@ import androidx.navigation.NavController
 import com.example.cartbutler.components.CategorySection
 import com.example.cartbutler.components.SearchWithDropdown
 import com.example.cartbutler.network.RetrofitInstance
-import com.example.cartbutler.network.networkModels.Category
 import com.example.cartbutler.viewmodel.CategoryViewModel
 import com.example.cartbutler.viewmodel.ProductSuggestionViewModel
 
@@ -52,7 +51,7 @@ fun HomePage(navController: NavController) {
                 CategorySection(
                     categories = categories,
                     onCategoryClick = { category ->
-                        navController.navigate("categoryProducts/${Category.categoryId}")
+                        navController.navigate("categoryProducts/${category.categoryId}")
                     }
                 )
             }
