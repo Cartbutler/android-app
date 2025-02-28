@@ -27,13 +27,17 @@ import androidx.compose.material.icons.Icons
 fun ProductSearchScreen(
     navController: NavController,
     searchQuery: String?,
-    categoryId: Int?
+    categoryId: Int?,
+    passedCategoryName: String?
 ) {
     val viewModel: ProductSearchViewModel = viewModel(
         key = "search_${searchQuery}_category_${categoryId}"
     )
 
-    LaunchedEffect(key1 = searchQuery, key2 = categoryId) { // Fixed parameter names
+    LaunchedEffect(key1 = searchQuery, key2 = categoryId) {
+        if (categoryId != null && passedCategoryName != null) {
+            viewModel.setCategoryName(passedCategoryName)
+        }
         when {
             searchQuery != null -> viewModel.loadProducts(searchQuery, null)
             categoryId != null -> viewModel.loadProducts(null, categoryId)
@@ -46,14 +50,12 @@ fun ProductSearchScreen(
     val currentSearch by viewModel.searchQuery.collectAsState()
     val categoryName by viewModel.categoryName.collectAsState()
 
-    val title = when {
-        currentSearch != null -> stringResource(
-            R.string.searchingFor,
-            currentSearch ?: ""
-        )
-        categoryName != null -> categoryName ?: stringResource(R.string.products_title)
+    val title: String = when {
+        currentSearch != null -> stringResource(R.string.searchingFor, currentSearch ?: "")
+        passedCategoryName != null -> passedCategoryName
+        categoryName != null -> categoryName
         else -> stringResource(R.string.products_title)
-    }
+    }.toString()
 
     Scaffold(
         topBar = {

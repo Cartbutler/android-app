@@ -56,15 +56,18 @@ class MainActivity : ComponentActivity() {
                             ProductSearchScreen(
                                 navController = navController,
                                 searchQuery = query,
-                                categoryId = null
+                                categoryId = null,
+                                passedCategoryName = null
                             )
                         }
-                        composable("categoryProducts/{categoryId}") { backStackEntry ->
+                        composable("categoryProducts/{categoryId}/{categoryName}") { backStackEntry ->
                             val categoryId = backStackEntry.arguments?.getString("categoryId")?.toIntOrNull()
+                            val categoryName = backStackEntry.arguments?.getString("categoryName")
                             ProductSearchScreen(
                                 navController = navController,
                                 searchQuery = null,
-                                categoryId = categoryId
+                                categoryId = categoryId,
+                                passedCategoryName = categoryName
                             )
                         }
                         composable("productDetail/{productId}") { backStackEntry ->

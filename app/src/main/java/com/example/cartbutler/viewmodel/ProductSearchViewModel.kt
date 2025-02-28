@@ -50,9 +50,7 @@ class ProductSearchViewModel(
                 _products.value = response
 
                 query?.let { _searchQuery.value = it }
-                categoryId?.let {
-                    _categoryName.value = response.firstOrNull()?.categoryName
-                }
+
             } catch (e: Exception) {
                 _errorMessage.value = "Error: ${e.message ?: "Unknown error"}"
             } finally {
@@ -63,5 +61,9 @@ class ProductSearchViewModel(
 
     fun retry() {
         loadProducts(lastQuery, lastCategoryId)
+    }
+
+    fun setCategoryName(name: String?) {
+        _categoryName.value = name
     }
 }
