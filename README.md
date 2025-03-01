@@ -1,4 +1,2 @@
 # android-app
-# android-app
-# android-app
-# android-app
+The repository for the CartButler iOS app
