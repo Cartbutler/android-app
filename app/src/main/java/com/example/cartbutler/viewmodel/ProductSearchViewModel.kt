@@ -32,10 +32,12 @@ class ProductSearchViewModel(
     private var currentJob: Job? = null
     private var lastQuery: String? = null
     private var lastCategoryId: Int? = null
+    private var lastCategoryName: String? = null
 
-    fun loadProducts(query: String?, categoryId: Int?) {
+    fun loadProductsByQuery(query: String) {
         lastQuery = query
-        lastCategoryId = categoryId
+        lastCategoryId = null
+        lastCategoryName = null
 
         currentJob?.cancel()
         currentJob = viewModelScope.launch {
@@ -46,11 +48,33 @@ class ProductSearchViewModel(
             _products.value = emptyList()
 
             try {
-                val response = apiService.searchProducts(query, categoryId)
+                val response = apiService.searchProducts(query, null)
                 _products.value = response
+                _searchQuery.value = query
+            } catch (e: Exception) {
+                _errorMessage.value = "Error: ${e.message ?: "Unknown error"}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
 
-                query?.let { _searchQuery.value = it }
+    fun loadProductsByCategory(categoryId: Int, categoryName: String) {
+        lastCategoryId = categoryId
+        lastCategoryName = categoryName
+        lastQuery = null
 
+        currentJob?.cancel()
+        currentJob = viewModelScope.launch {
+            _isLoading.value = true
+            _errorMessage.value = null
+            _searchQuery.value = null
+            _products.value = emptyList()
+
+            try {
+                val response = apiService.searchProducts(null, categoryId)
+                _products.value = response
+                _categoryName.value = categoryName
             } catch (e: Exception) {
                 _errorMessage.value = "Error: ${e.message ?: "Unknown error"}"
             } finally {
@@ -60,10 +84,10 @@ class ProductSearchViewModel(
     }
 
     fun retry() {
-        loadProducts(lastQuery, lastCategoryId)
-    }
-
-    fun setCategoryName(name: String?) {
-        _categoryName.value = name
+        when {
+            lastQuery != null -> loadProductsByQuery(lastQuery!!)
+            lastCategoryId != null && lastCategoryName != null ->
+                loadProductsByCategory(lastCategoryId!!, lastCategoryName!!)
+        }
     }
 }

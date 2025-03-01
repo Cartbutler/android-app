@@ -35,12 +35,10 @@ fun ProductSearchScreen(
     )
 
     LaunchedEffect(key1 = searchQuery, key2 = categoryId) {
-        if (categoryId != null && passedCategoryName != null) {
-            viewModel.setCategoryName(passedCategoryName)
-        }
         when {
-            searchQuery != null -> viewModel.loadProducts(searchQuery, null)
-            categoryId != null -> viewModel.loadProducts(null, categoryId)
+            searchQuery != null -> viewModel.loadProductsByQuery(searchQuery)
+            categoryId != null && passedCategoryName != null ->
+                viewModel.loadProductsByCategory(categoryId, passedCategoryName)
         }
     }
 
@@ -52,10 +50,9 @@ fun ProductSearchScreen(
 
     val title: String = when {
         currentSearch != null -> stringResource(R.string.searchingFor, currentSearch ?: "")
-        passedCategoryName != null -> passedCategoryName
-        categoryName != null -> categoryName
+        categoryName != null -> categoryName!!
         else -> stringResource(R.string.products_title)
-    }.toString()
+    }
 
     Scaffold(
         topBar = {
@@ -103,14 +100,12 @@ fun ProductSearchScreen(
                         text = when {
                             currentSearch != null -> stringResource(
                                 R.string.no_results_search,
-                                currentSearch ?: "" // Handle null case here
+                                currentSearch ?: ""
                             )
-
                             categoryName != null -> stringResource(
                                 R.string.no_results_category,
                                 categoryName ?: ""
                             )
-
                             else -> stringResource(R.string.no_products)
                         },
                         modifier = Modifier.align(Alignment.Center)
