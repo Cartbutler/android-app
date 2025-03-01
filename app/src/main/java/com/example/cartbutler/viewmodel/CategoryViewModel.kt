@@ -2,7 +2,7 @@ package com.example.cartbutler.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cartbutler.network.Category
+import com.example.cartbutler.network.networkModels.Category
 import com.example.cartbutler.network.RetrofitInstance
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.mutableStateOf

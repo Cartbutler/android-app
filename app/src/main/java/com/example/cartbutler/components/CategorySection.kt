@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.cartbutler.R
-import com.example.cartbutler.network.Category
+import com.example.cartbutler.network.networkModels.Category
 
 /**
  * Displays a section of categories arranged in rows.
@@ -48,10 +48,12 @@ fun CategorySection(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(categories) { category ->
-                CategoryItem(category.categoryName) {
-                    onCategoryClick(category)
+                CategoryItem(
+                    categoryName = category.categoryName,
+                    imagePath = category.imagePath,
+                    onClick = { onCategoryClick(category) }
+                )
                 }
             }
         }
     }
-}

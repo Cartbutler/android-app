@@ -2,44 +2,92 @@ package com.example.cartbutler.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cartbutler.network.Product
+import com.example.cartbutler.network.ApiService
+import com.example.cartbutler.network.networkModels.Product
 import com.example.cartbutler.network.RetrofitInstance
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class ProductSearchViewModel : ViewModel() {
-    private val apiService = RetrofitInstance.api
-    private var lastQuery: String = ""
+class ProductSearchViewModel(
+    private val apiService: ApiService = RetrofitInstance.api
+) : ViewModel() {
 
-    private val _searchResults = MutableStateFlow<List<Product>>(emptyList())
-    val searchResults: StateFlow<List<Product>> = _searchResults
+    private val _products = MutableStateFlow<List<Product>>(emptyList())
+    val products: StateFlow<List<Product>> = _products
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
-    private val _error = MutableStateFlow<String?>(null)
-    val error: StateFlow<String?> = _error
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage
 
-    fun searchProducts(query: String) {
+    private val _searchQuery = MutableStateFlow<String?>(null)
+    val searchQuery: StateFlow<String?> = _searchQuery
+
+    private val _categoryName = MutableStateFlow<String?>(null)
+    val categoryName: StateFlow<String?> = _categoryName
+
+    private var currentJob: Job? = null
+    private var lastQuery: String? = null
+    private var lastCategoryId: Int? = null
+    private var lastCategoryName: String? = null
+
+    fun loadProductsByQuery(query: String) {
         lastQuery = query
-        viewModelScope.launch {
+        lastCategoryId = null
+        lastCategoryName = null
+
+        currentJob?.cancel()
+        currentJob = viewModelScope.launch {
             _isLoading.value = true
-            _error.value = null
+            _errorMessage.value = null
+            _searchQuery.value = null
+            _categoryName.value = null
+            _products.value = emptyList()
+
             try {
-                _searchResults.value = apiService.searchProducts(query = query, categoryID = null)
+                val response = apiService.searchProducts(query, null)
+                _products.value = response
+                _searchQuery.value = query
             } catch (e: Exception) {
-                _error.value = "Failed to load results. Please try again."
-                _searchResults.value = emptyList()
+                _errorMessage.value = "Error: ${e.message ?: "Unknown error"}"
             } finally {
                 _isLoading.value = false
             }
         }
     }
 
-    fun retrySearch() {
-        if (lastQuery.isNotBlank()) {
-            searchProducts(lastQuery)
+    fun loadProductsByCategory(categoryId: Int, categoryName: String) {
+        lastCategoryId = categoryId
+        lastCategoryName = categoryName
+        lastQuery = null
+
+        currentJob?.cancel()
+        currentJob = viewModelScope.launch {
+            _isLoading.value = true
+            _errorMessage.value = null
+            _searchQuery.value = null
+            _products.value = emptyList()
+
+            try {
+                val response = apiService.searchProducts(null, categoryId)
+                _products.value = response
+                _categoryName.value = categoryName
+            } catch (e: Exception) {
+                _errorMessage.value = "Error: ${e.message ?: "Unknown error"}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun retry() {
+        when {
+            lastQuery != null -> loadProductsByQuery(lastQuery!!)
+            lastCategoryId != null && lastCategoryName != null ->
+                loadProductsByCategory(lastCategoryId!!, lastCategoryName!!)
         }
     }
 }

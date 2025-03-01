@@ -18,7 +18,8 @@ import com.example.cartbutler.screens.HomePage
 import com.example.cartbutler.screens.CartScreen
 import com.example.cartbutler.screens.ProfileScreen
 import com.example.cartbutler.ui.theme.CartbutlerTheme
-import com.example.cartbutler.screens.*
+import com.example.cartbutler.screens.ProductSearchScreen
+import com.example.cartbutler.screens.ProductDetailScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : ComponentActivity() {
@@ -52,7 +53,22 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("search/{query}") { backStackEntry ->
                             val query = backStackEntry.arguments?.getString("query") ?: ""
-                            ProductSearchScreen(navController = navController, searchQuery = query)
+                            ProductSearchScreen(
+                                navController = navController,
+                                searchQuery = query,
+                                categoryId = null,
+                                passedCategoryName = null
+                            )
+                        }
+                        composable("categoryProducts/{categoryId}/{categoryName}") { backStackEntry ->
+                            val categoryId = backStackEntry.arguments?.getString("categoryId")?.toIntOrNull()
+                            val categoryName = backStackEntry.arguments?.getString("categoryName")
+                            ProductSearchScreen(
+                                navController = navController,
+                                searchQuery = null,
+                                categoryId = categoryId,
+                                passedCategoryName = categoryName
+                            )
                         }
                         composable("productDetail/{productId}") { backStackEntry ->
                             val productId = backStackEntry.arguments?.getString("productId")?.toIntOrNull()

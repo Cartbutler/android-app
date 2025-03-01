@@ -9,4 +9,11 @@
     <string name="add_to_cart">Add to cart</string>
     <string name="Details">Details</string>
     <string name="back_button">Back</string>
+    <string name="category_default">Category</string>
+    <string name="no_products_found">No products found\n</string>
+    <string name="products_title">Products</string>
+    <string name="retry">Try Again</string>
+    <string name="no_results_search">No results found for "%s"</string>
+    <string name="no_results_category">No products in "%s"</string>
+    <string name="no_products">No products found</string>
 </resources>
