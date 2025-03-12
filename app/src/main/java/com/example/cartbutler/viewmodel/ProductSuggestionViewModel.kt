@@ -3,7 +3,7 @@ package com.example.cartbutler.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cartbutler.network.ApiService
-import com.example.cartbutler.network.ProductSuggestion
+import com.example.cartbutler.network.networkModels.ProductSuggestion
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

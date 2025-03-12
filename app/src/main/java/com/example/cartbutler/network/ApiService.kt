@@ -2,6 +2,8 @@ package com.example.cartbutler.network
 
 import com.example.cartbutler.network.networkModels.Category
 import com.example.cartbutler.network.networkModels.Product
+import com.example.cartbutler.network.networkModels.CartResponse
+import com.example.cartbutler.network.networkModels.ProductSuggestion
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -27,4 +29,10 @@ interface ApiService {
     // Return single product
     @GET("product")
     suspend fun getProductById(@Query("id") productId: Int): Product
+
+    // Return cart for user
+    @GET("cart")
+    suspend fun getCart(
+        @Query("userId") userId: String
+    ): CartResponse
 }
