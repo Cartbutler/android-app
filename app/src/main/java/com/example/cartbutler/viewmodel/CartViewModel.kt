@@ -5,32 +5,46 @@ import androidx.lifecycle.viewModelScope
 import com.example.cartbutler.repositories.CartRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import com.example.cartbutler.network.networkModels.CartResponse
 
 class CartViewModel(
     private val repository: CartRepository
 ) : ViewModel() {
 
-    private val _cartState = MutableStateFlow<CartResponse?>(null)
-    val cartState: StateFlow<CartResponse?> = _cartState
+    private val _cartItemsCount = MutableStateFlow(0)
+    val cartItemsCount: StateFlow<Int> = _cartItemsCount.asStateFlow()
 
     private val _loading = MutableStateFlow(false)
-    val loading: StateFlow<Boolean> = _loading
+    val loading: StateFlow<Boolean> = _loading.asStateFlow()
 
     private val _error = MutableStateFlow<String?>(null)
-    val error: StateFlow<String?> = _error
+    val error: StateFlow<String?> = _error.asStateFlow()
 
-    fun fetchCart() {
+    fun addToCart(productId: Int, quantity: Int = 1) {
         viewModelScope.launch {
             _loading.value = true
             try {
-                _cartState.value = repository.getCart()
-                _error.value = null
+                _cartItemsCount.value += quantity
+                repository.addToCart(productId, quantity)
+                val updatedCart = repository.getCart()
+                _cartItemsCount.value = updatedCart.cartItems.sumOf { it.quantity }
             } catch (e: Exception) {
+                _cartItemsCount.value -= quantity
                 _error.value = "Error: ${e.message}"
             } finally {
                 _loading.value = false
+            }
+        }
+    }
+
+    fun loadCartCount() {
+        viewModelScope.launch {
+            try {
+                val cart = repository.getCart()
+                _cartItemsCount.value = cart.cartItems.sumOf { it.quantity }
+            } catch (e: Exception) {
+                _error.value = "Error loading cart: ${e.message}"
             }
         }
     }
