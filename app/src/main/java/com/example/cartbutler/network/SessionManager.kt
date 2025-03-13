@@ -1,10 +1,12 @@
 package com.example.cartbutler.network
 
 import android.content.Context
+import android.provider.Settings.Secure
 import android.content.SharedPreferences
 import java.util.UUID
 
 class SessionManager(context: Context) {
+    private val context = context
     private val prefs: SharedPreferences = context.getSharedPreferences("CartButlerPrefs", Context.MODE_PRIVATE)
 
     companion object {
@@ -16,7 +18,8 @@ class SessionManager(context: Context) {
     }
 
     private fun createNewSessionId(): String {
-        val newId = UUID.randomUUID().toString()
+        val androidId = Secure.getString(context.contentResolver, Secure.ANDROID_ID)
+        val newId = androidId ?: UUID.randomUUID().toString()
         prefs.edit().putString(KEY_SESSION_ID, newId).apply()
         return newId
     }

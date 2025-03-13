@@ -1,10 +1,13 @@
 package com.example.cartbutler.network.networkModels
 
+import com.google.gson.annotations.SerializedName
+
 data class Cart(
     val id: Int,
-    val userId: String,
-    val cartItems: List<CartItem>
+    val userId: String? = null,
+    val cartItems: List<CartItem> = emptyList()
 )
+
 
 data class CartItem(
     val productId: Int,
@@ -12,20 +15,8 @@ data class CartItem(
     val products: Product
 )
 
-data class CartResponse(
-    val id: Int,
-    val userId: String,
-    val cartItems: List<CartItemResponse>
-)
-
-data class CartItemResponse(
-    val productId: Int,
-    val quantity: Int,
-    val products: Product
-)
-
 data class AddToCartRequest(
-    val userId: String,
-    val productId: Int,
+    @SerializedName("userId") val userId: String,
+    @SerializedName("productId") val productId: Int,
     val quantity: Int
 )

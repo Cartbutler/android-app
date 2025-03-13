@@ -21,16 +21,29 @@ class CartViewModel(
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error.asStateFlow()
 
+    init {
+        loadInitialCartCount()
+    }
+
+    private fun loadInitialCartCount() {
+        viewModelScope.launch {
+            try {
+                val cart = repository.getCart()
+                _cartItemsCount.value = cart.cartItems.sumOf { it.quantity }
+            } catch (e: Exception) {
+                _error.value = "Error loading initial cart: ${e.message}"
+            }
+        }
+    }
+
     fun addToCart(productId: Int, quantity: Int = 1) {
         viewModelScope.launch {
             _loading.value = true
             try {
-                _cartItemsCount.value += quantity
-                repository.addToCart(productId, quantity)
-                val updatedCart = repository.getCart()
-                _cartItemsCount.value = updatedCart.cartItems.sumOf { it.quantity }
+                val updatedCart = repository.addToCart(productId, quantity)
+                val count = updatedCart.cartItems.sumOf { it.quantity }
+                _cartItemsCount.value = count
             } catch (e: Exception) {
-                _cartItemsCount.value -= quantity
                 _error.value = "Error: ${e.message}"
             } finally {
                 _loading.value = false
@@ -38,13 +51,13 @@ class CartViewModel(
         }
     }
 
-    fun loadCartCount() {
+    fun refreshCartCount() {
         viewModelScope.launch {
             try {
                 val cart = repository.getCart()
                 _cartItemsCount.value = cart.cartItems.sumOf { it.quantity }
             } catch (e: Exception) {
-                _error.value = "Error loading cart: ${e.message}"
+                _error.value = "Error refreshing cart: ${e.message}"
             }
         }
     }

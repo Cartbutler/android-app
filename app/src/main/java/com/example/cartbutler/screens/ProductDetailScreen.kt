@@ -34,8 +34,11 @@ fun ProductDetailScreen(
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(productId) {
-        productId?.let { productDetailViewModel.loadProduct(it) }
+        if (productId != null) {
+            productDetailViewModel.loadProduct(productId)
+        }
     }
+
 
     Scaffold(
         topBar = {

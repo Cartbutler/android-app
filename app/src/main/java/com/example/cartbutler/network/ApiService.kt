@@ -2,7 +2,7 @@ package com.example.cartbutler.network
 
 import com.example.cartbutler.network.networkModels.Category
 import com.example.cartbutler.network.networkModels.Product
-import com.example.cartbutler.network.networkModels.CartResponse
+import com.example.cartbutler.network.networkModels.Cart
 import com.example.cartbutler.network.networkModels.AddToCartRequest
 import com.example.cartbutler.network.networkModels.ProductSuggestion
 import retrofit2.http.GET
@@ -38,11 +38,11 @@ interface ApiService {
     @GET("cart")
     suspend fun getCart(
         @Query("userId") userId: String
-    ): CartResponse
+    ): Cart
 
     // Add product to cart
     @POST("cart")
     suspend fun addToCart(
         @Body addToCartRequest: AddToCartRequest
-    ): Response<CartResponse>
+    ): Response<Cart>
 }

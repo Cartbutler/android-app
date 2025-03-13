@@ -2,6 +2,7 @@ package com.example.cartbutler.components
 
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -25,6 +26,7 @@ import androidx.compose.runtime.collectAsState
  * @param navController The [NavController] used to handle navigation between destinations.
  * @param currentRoute The current route to determine which navigation item is selected.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppFooter(
     navController: NavController = rememberNavController(),
@@ -48,7 +50,7 @@ fun AppFooter(
                     navController.navigate(item.route) {
                         launchSingleTop = true
                         if (item.route == "cart") {
-                            cartViewModel.loadCartCount()
+                            cartViewModel.refreshCartCount()
                         }
                     }
                 },
