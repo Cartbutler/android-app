@@ -3,11 +3,13 @@ package com.example.cartbutler.network
 import com.example.cartbutler.network.networkModels.Category
 import com.example.cartbutler.network.networkModels.Product
 import com.example.cartbutler.network.networkModels.CartResponse
+import com.example.cartbutler.network.networkModels.AddToCartRequest
 import com.example.cartbutler.network.networkModels.ProductSuggestion
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.Response
 import retrofit2.http.Query
+import retrofit2.http.Body
 
 interface ApiService {
 
@@ -41,8 +43,6 @@ interface ApiService {
     // Add product to cart
     @POST("cart")
     suspend fun addToCart(
-        @Query("userId") userId: String,
-        @Query("productId") productId: Int,
-        @Query("quantity") quantity: Int
-    ): Response<Unit>
+        @Body addToCartRequest: AddToCartRequest
+    ): Response<CartResponse>
 }

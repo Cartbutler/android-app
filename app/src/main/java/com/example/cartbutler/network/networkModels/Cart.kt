@@ -23,3 +23,9 @@ data class CartItemResponse(
     val quantity: Int,
     val products: Product
 )
+
+data class AddToCartRequest(
+    val userId: String,
+    val productId: Int,
+    val quantity: Int
+)

@@ -4,12 +4,21 @@ import com.google.gson.GsonBuilder
 import com.google.gson.FieldNamingPolicy
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import com.example.cartbutler.network.networkModels.AddToCartRequest
 
 object RetrofitInstance {
     private const val BASE_URL = "https://southern-shard-449119-d4.nn.r.appspot.com/"
 
-    private val gson = GsonBuilder()
-        .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+    val gson = GsonBuilder()
+        .setFieldNamingStrategy { field ->
+            if (field.declaringClass == AddToCartRequest::class.java &&
+                (field.name == "userId" || field.name == "productId")
+            ) {
+                field.name
+            } else {
+                FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES.translateName(field)
+            }
+        }
         .create()
 
     val api: ApiService by lazy {
