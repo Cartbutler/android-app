@@ -36,13 +36,14 @@ class CartViewModel(
         }
     }
 
-    fun addToCart(productId: Int, quantity: Int = 1) {
+    fun addToCart(productId: Int) {
         viewModelScope.launch {
             _loading.value = true
             try {
-                val updatedCart = repository.addToCart(productId, quantity)
-                val count = updatedCart.cartItems.sumOf { it.quantity }
-                _cartItemsCount.value = count
+                repository.addToCart(productId, 1)
+                val updatedCart = repository.getCart()
+                _cartItemsCount.value = updatedCart.cartItems.sumOf { it.quantity }
+
             } catch (e: Exception) {
                 _error.value = "Error: ${e.message}"
             } finally {
