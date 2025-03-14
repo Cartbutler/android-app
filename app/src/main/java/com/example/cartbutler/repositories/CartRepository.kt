@@ -5,39 +5,29 @@ import com.example.cartbutler.network.ApiService
 import com.example.cartbutler.network.SessionManager
 import com.example.cartbutler.network.networkModels.Cart
 import com.example.cartbutler.network.networkModels.AddToCartRequest
-import retrofit2.HttpException
 
 class CartRepository(
     private val apiService: ApiService,
     private val sessionManager: SessionManager
 ) {
+    // CartRepository.kt
     suspend fun addToCart(productId: Int, quantity: Int): Cart {
         try {
-            Log.d(this::class.simpleName, "addToCart() - productId: $productId, quantity: $quantity")
+            val request = AddToCartRequest(
+                userId = sessionManager.getSessionId(),
+                productId = productId,
+                quantity = quantity
+            )
 
-            val sessionId = sessionManager.getSessionId()
-            Log.d(this::class.simpleName, "Session ID: $sessionId")
+            val cart = apiService.addToCart(request)
 
-            val request = AddToCartRequest(sessionId, productId, quantity)
-            Log.d(this::class.simpleName, "Request: $request")
+            require(cart.userId.isNotEmpty()) { "User ID cannot be null" }
+            require(cart.cartItems.isNotEmpty()) { "Cart cannot be empty" }
 
-            val response = apiService.addToCart(request)
-            Log.d(this::class.simpleName, "Response Code: ${response.code()}")
-            Log.d(this::class.simpleName, "Raw JSON: ${response.body()?.toString()}")
-
-            if (!response.isSuccessful) {
-                Log.e(this::class.simpleName, "Error: ${response.errorBody()?.string()}")
-                throw HttpException(response)
-            }
-
-            val cartResponse = response.body() ?: throw Exception("Empty cart response")
-            Log.d(this::class.simpleName, "Cart Response: $cartResponse")
-
-            return cartResponse
+            return cart
 
         } catch (e: Exception) {
-            Log.e(this::class.simpleName, "addToCart failed: ${e.message}")
-            throw Exception("Failed to add to cart: ${e.message}")
+            throw Exception("Cannot add to cart: ${e.message}")
         }
     }
 

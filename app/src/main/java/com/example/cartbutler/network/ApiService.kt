@@ -7,7 +7,6 @@ import com.example.cartbutler.network.networkModels.AddToCartRequest
 import com.example.cartbutler.network.networkModels.ProductSuggestion
 import retrofit2.http.GET
 import retrofit2.http.POST
-import retrofit2.Response
 import retrofit2.http.Query
 import retrofit2.http.Body
 
@@ -44,5 +43,5 @@ interface ApiService {
     @POST("cart")
     suspend fun addToCart(
         @Body addToCartRequest: AddToCartRequest
-    ): Response<Cart>
+    ): Cart
 }

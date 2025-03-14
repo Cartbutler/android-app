@@ -4,8 +4,8 @@ import com.google.gson.annotations.SerializedName
 
 data class Cart(
     val id: Int,
-    val userId: String? = null,
-    val cartItems: List<CartItem> = emptyList()
+    val userId: String,
+    val cartItems: List<CartItem>
 )
 
 
