@@ -19,6 +19,7 @@ class CartRepository(
 
             val sessionId = sessionManager.getSessionId().also {
                 Log.d("CartRepository", "SessionID: $it")
+                require(!it.isNullOrEmpty()) { "Session ID não pode ser nulo!" }
             }
 
             val request = AddToCartRequest(
@@ -28,6 +29,7 @@ class CartRepository(
             ).also {
                 Log.d("CartRepository", "Request: ${it.userId}, ${it.productId}, ${it.quantity}")
             }
+
 
             Log.d("CartRepository", "Enviando requisição para API...")
             val cart = apiService.addToCart(request).also {
