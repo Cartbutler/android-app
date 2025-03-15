@@ -7,6 +7,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 class CartViewModel(
     private val repository: CartRepository
@@ -20,6 +22,10 @@ class CartViewModel(
 
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error.asStateFlow()
+
+    private val debounceMutex = Mutex()
+    private var lastClickTime = 0L
+    private val debounceInterval = 500L
 
     init {
         loadInitialCartCount()
@@ -38,20 +44,28 @@ class CartViewModel(
 
     fun addToCart(productId: Int) {
         viewModelScope.launch {
-            _loading.value = true
-            try {
-                val currentCart = repository.getCart()
+            debounceMutex.withLock {
+                val currentTime = System.currentTimeMillis()
+                if (currentTime - lastClickTime < debounceInterval) {
+                    return@withLock
+                }
+                lastClickTime = currentTime
 
-                val existingItem = currentCart.cartItems.find { it.productId == productId }
-                val newQuantity = existingItem?.quantity?.plus(1) ?: 1
-                repository.addToCart(productId, newQuantity)
-                val updatedCart = repository.getCart()
-                _cartItemsCount.value = updatedCart.cartItems.sumOf { it.quantity }
+                _loading.value = true
+                try {
+                    val currentCart = repository.getCart()
+                    val existingItem = currentCart.cartItems.find { it.productId == productId }
+                    val newQuantity = existingItem?.quantity?.plus(1) ?: 1
 
-            } catch (e: Exception) {
-                _error.value = "Error: ${e.message}"
-            } finally {
-                _loading.value = false
+                    repository.addToCart(productId, newQuantity)
+                    val updatedCart = repository.getCart()
+                    _cartItemsCount.value = updatedCart.cartItems.sumOf { it.quantity }
+
+                } catch (e: Exception) {
+                    _error.value = "Error: ${e.message}"
+                } finally {
+                    _loading.value = false
+                }
             }
         }
     }
