@@ -40,7 +40,11 @@ class CartViewModel(
         viewModelScope.launch {
             _loading.value = true
             try {
-                repository.addToCart(productId, 1)
+                val currentCart = repository.getCart()
+
+                val existingItem = currentCart.cartItems.find { it.productId == productId }
+                val newQuantity = existingItem?.quantity?.plus(1) ?: 1
+                repository.addToCart(productId, newQuantity)
                 val updatedCart = repository.getCart()
                 _cartItemsCount.value = updatedCart.cartItems.sumOf { it.quantity }
 
