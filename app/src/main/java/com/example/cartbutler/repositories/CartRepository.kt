@@ -38,9 +38,6 @@ class CartRepository(
             }
 
             Log.d("CartRepository", "Validando campos obrigatórios...")
-            require(cart.userId.isNotEmpty()) {
-                "UserID vazio na resposta. Resposta completa: $cart"
-            }
             require(cart.cartItems.isNotEmpty()) {
                 "Carrinho vazio na resposta. Resposta completa: $cart"
             }
