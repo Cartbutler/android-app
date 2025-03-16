@@ -28,6 +28,11 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.cartbutler.viewmodel.CartViewModel
 import com.example.cartbutler.network.networkModels.Cart
 import com.example.cartbutler.network.networkModels.CartItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Remove
 
 @Composable
 fun CartScreen(cartViewModel: CartViewModel) {
@@ -68,7 +73,10 @@ fun CartScreen(cartViewModel: CartViewModel) {
                             .padding(bottom = 80.dp)
                     ) {
                         items(cart.cartItems) { item ->
-                            CartItemRow(item = item)
+                            CartItemRow(
+                                item = item,
+                                viewModel = cartViewModel
+                            )
                         }
                     }
                 }
@@ -88,7 +96,7 @@ fun CartScreen(cartViewModel: CartViewModel) {
 }
 
 @Composable
-private fun CartItemRow(item: CartItem) {
+private fun CartItemRow(item: CartItem, viewModel: CartViewModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -104,21 +112,53 @@ private fun CartItemRow(item: CartItem) {
 
         Spacer(modifier = Modifier.width(16.dp))
 
-        Column {
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
             Text(
                 text = item.product.productName,
                 style = MaterialTheme.typography.titleMedium
             )
             Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "Price: $${"%.2f".format(item.product.price)}",
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "Quantity: ${item.quantity}",
-                style = MaterialTheme.typography.bodySmall
-            )
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = "$${"%.2f".format(item.product.price)}",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(
+                        onClick = { viewModel.updateQuantity(item.product.productId, item.quantity - 1) },
+                        enabled = item.quantity > 1
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Remove,
+                            contentDescription = "Decrease"
+                        )
+                    }
+
+                    Text(
+                        text = "${item.quantity}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    )
+
+                    IconButton(
+                        onClick = { viewModel.updateQuantity(item.product.productId, item.quantity + 1) }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Increase"
+                        )
+                    }
+                }
+            }
+
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = "Total: $${"%.2f".format(item.product.price * item.quantity)}",

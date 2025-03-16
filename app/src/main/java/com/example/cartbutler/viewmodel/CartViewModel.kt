@@ -65,6 +65,26 @@ class CartViewModel(
         }
     }
 
+    fun updateQuantity(productId: Int, newQuantity: Int) {
+        viewModelScope.launch {
+            debounceMutex.withLock {
+                val currentTime = System.currentTimeMillis()
+                if (currentTime - lastClickTime < debounceInterval) return@withLock
+                lastClickTime = currentTime
+
+                _loading.value = true
+                try {
+                    repository.addToCart(productId, newQuantity)
+                    refreshCart()
+                } catch (e: Exception) {
+                    _error.value = "Error updating quantity: ${e.message}"
+                } finally {
+                    _loading.value = false
+                }
+            }
+        }
+    }
+
     fun addToCart(productId: Int) {
         viewModelScope.launch {
             debounceMutex.withLock {
