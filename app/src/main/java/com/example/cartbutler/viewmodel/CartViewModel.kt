@@ -2,6 +2,7 @@ package com.example.cartbutler.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.cartbutler.network.networkModels.Cart
 import com.example.cartbutler.repositories.CartRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,6 +18,9 @@ class CartViewModel(
     private val _cartItemsCount = MutableStateFlow(0)
     val cartItemsCount: StateFlow<Int> = _cartItemsCount.asStateFlow()
 
+    private val _cart = MutableStateFlow<Cart?>(null)
+    val cart: StateFlow<Cart?> = _cart.asStateFlow()
+
     private val _loading = MutableStateFlow(false)
     val loading: StateFlow<Boolean> = _loading.asStateFlow()
 
@@ -28,16 +32,35 @@ class CartViewModel(
     private val debounceInterval = 500L
 
     init {
-        loadInitialCartCount()
+        loadInitialCart()
     }
 
-    private fun loadInitialCartCount() {
+    private fun loadInitialCart() {
         viewModelScope.launch {
             try {
+                _loading.value = true
                 val cart = repository.getCart()
+                _cart.value = cart
                 _cartItemsCount.value = cart.cartItems.sumOf { it.quantity }
             } catch (e: Exception) {
-                _error.value = "Error loading initial cart: ${e.message}"
+                _error.value = "Error loading cart: ${e.message}"
+            } finally {
+                _loading.value = false
+            }
+        }
+    }
+
+    fun refreshCart() {
+        viewModelScope.launch {
+            try {
+                _loading.value = true
+                val cart = repository.getCart()
+                _cart.value = cart
+                _cartItemsCount.value = cart.cartItems.sumOf { it.quantity }
+            } catch (e: Exception) {
+                _error.value = "Error refreshing cart: ${e.message}"
+            } finally {
+                _loading.value = false
             }
         }
     }
@@ -46,37 +69,22 @@ class CartViewModel(
         viewModelScope.launch {
             debounceMutex.withLock {
                 val currentTime = System.currentTimeMillis()
-                if (currentTime - lastClickTime < debounceInterval) {
-                    return@withLock
-                }
+                if (currentTime - lastClickTime < debounceInterval) return@withLock
                 lastClickTime = currentTime
 
                 _loading.value = true
                 try {
                     val currentCart = repository.getCart()
-                    val existingItem = currentCart.cartItems.find { it.productId == productId }
+                    val existingItem = currentCart.cartItems.find { it.product.productId == productId }
                     val newQuantity = existingItem?.quantity?.plus(1) ?: 1
 
                     repository.addToCart(productId, newQuantity)
-                    val updatedCart = repository.getCart()
-                    _cartItemsCount.value = updatedCart.cartItems.sumOf { it.quantity }
-
+                    refreshCart()
                 } catch (e: Exception) {
-                    _error.value = "Error: ${e.message}"
+                    _error.value = "Error adding to cart: ${e.message}"
                 } finally {
                     _loading.value = false
                 }
-            }
-        }
-    }
-
-    fun refreshCartCount() {
-        viewModelScope.launch {
-            try {
-                val cart = repository.getCart()
-                _cartItemsCount.value = cart.cartItems.sumOf { it.quantity }
-            } catch (e: Exception) {
-                _error.value = "Error refreshing cart: ${e.message}"
             }
         }
     }

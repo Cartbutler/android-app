@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
                             HomePage(navController = navController)
                         }
                         composable("cart") {
-                            CartScreen()
+                            CartScreen(cartViewModel = cartViewModel)
                         }
                         composable("profile") {
                             ProfileScreen()
