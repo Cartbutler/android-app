@@ -1,48 +1,42 @@
 package com.example.cartbutler.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.ui.res.stringResource
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.cartbutler.network.networkModels.Product
-import com.example.cartbutler.viewmodel.ProductDetailViewModel
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material3.Icon
 import com.example.cartbutler.R
 import com.example.cartbutler.components.formatCurrency
+import com.example.cartbutler.network.networkModels.Product
+import com.example.cartbutler.viewmodel.CartViewModel
+import com.example.cartbutler.viewmodel.ProductDetailViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductDetailScreen(
     navController: NavController,
-    productId: Int?
+    productId: Int?,
+    cartViewModel: CartViewModel
 ) {
-    val viewModel: ProductDetailViewModel = viewModel()
-    val product by viewModel.product.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
-    val errorMessage: String? by viewModel.errorMessage.collectAsState()
-    val errorText = errorMessage
+    val productDetailViewModel: ProductDetailViewModel = viewModel()
+    val product by productDetailViewModel.product.collectAsState()
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(productId) {
-        productId?.let { viewModel.loadProduct(it) }
+        productId?.let { productDetailViewModel.loadProduct(it) }
     }
 
     Scaffold(
@@ -52,7 +46,7 @@ fun ProductDetailScreen(
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.back_button)
                         )
                     }
@@ -60,30 +54,34 @@ fun ProductDetailScreen(
             )
         }
     ) { innerPadding ->
-        Box(
+        Surface(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
-            when {
-                isLoading -> CircularProgressIndicator(Modifier.align(Alignment.Center))
-                errorText != null -> Text(
-                    text = errorText,
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.align(Alignment.Center)
+            product?.let {
+                ProductDetailsContent(
+                    product = it,
+                    onAddToCart = {
+                        scope.launch {
+                            productId?.let { id -> cartViewModel.addToCart(id) }
+                        }
+                    }
                 )
-                product != null -> ProductDetailsContent(product!!)
             }
         }
     }
 }
 
 @Composable
-private fun ProductDetailsContent(product: Product) {
+private fun ProductDetailsContent(
+    product: Product,
+    onAddToCart: () -> Unit
+) {
     Column(
         modifier = Modifier
-            .fillMaxSize()
             .padding(16.dp)
+            .verticalScroll(rememberScrollState())
     ) {
         AsyncImage(
             model = product.imagePath,
@@ -105,13 +103,23 @@ private fun ProductDetailsContent(product: Product) {
 
         Spacer(Modifier.height(8.dp))
 
-        Text(
-            text = formatCurrency(product.price),
-            style = MaterialTheme.typography.titleLarge.copy(
-                fontWeight = FontWeight.Bold
-            ),
-            color = MaterialTheme.colorScheme.primary
-        )
+        if (product.minPrice != null && product.maxPrice != null && product.minPrice < product.maxPrice) {
+            Text(
+                text = "${formatCurrency(product.minPrice)} - ${formatCurrency(product.maxPrice)}",
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontWeight = FontWeight.Bold
+                ),
+                color = MaterialTheme.colorScheme.primary
+            )
+        } else {
+            Text(
+                text = formatCurrency(product.price),
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontWeight = FontWeight.Bold
+                ),
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
 
         Spacer(Modifier.height(16.dp))
 
@@ -120,39 +128,72 @@ private fun ProductDetailsContent(product: Product) {
             style = MaterialTheme.typography.bodyLarge
         )
 
+        product.stores?.takeIf { it.isNotEmpty() }?.let { stores ->
+            Spacer(Modifier.height(24.dp))
+            Text(
+                text = "Price in stores:",
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontWeight = FontWeight.SemiBold
+                )
+            )
+
+            Spacer(Modifier.height(8.dp))
+
+            stores.forEach { store ->
+                StorePriceItem(
+                    storeName = store.storeName,
+                    price = store.price?.toFloatOrNull() ?: 0f
+                )
+            }
+        }
+
         Spacer(Modifier.weight(1f))
 
         Button(
-            onClick = { /* TODO: CREATE ADDTOCART FUNCTION */ },
+            onClick = onAddToCart,
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(min = 56.dp)
-                .padding(vertical = 8.dp),
-            shape = MaterialTheme.shapes.medium,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-            )
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    imageVector = Icons.Default.ShoppingCart,
+                    Icons.Default.ShoppingCart,
                     contentDescription = stringResource(R.string.cart_icon_desc),
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(Modifier.width(8.dp))
-                Text(
-                    text = stringResource(R.string.add_to_cart),
-                    style = MaterialTheme.typography.labelLarge.copy(
-                        fontWeight = FontWeight.Bold
-                    ),
-                    modifier = Modifier.padding(vertical = 4.dp)
-                )
+                Text(stringResource(R.string.add_to_cart))
             }
+        }
+    }
+}
+
+@Composable
+private fun StorePriceItem(storeName: String, price: Float) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = storeName,
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+                text = formatCurrency(price),
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            )
         }
     }
 }
