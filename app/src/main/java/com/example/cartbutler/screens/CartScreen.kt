@@ -23,8 +23,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
+import com.example.cartbutler.R
 import com.example.cartbutler.viewmodel.CartViewModel
 import com.example.cartbutler.network.networkModels.Cart
 import com.example.cartbutler.network.networkModels.CartItem
@@ -60,7 +62,7 @@ fun CartScreen(cartViewModel: CartViewModel) {
 
                 cart == null || cart.cartItems.isEmpty() -> {
                     Text(
-                        text = "Your cart is empty",
+                        text = stringResource(R.string.empty_cart),
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.align(Alignment.Center)
                     )
@@ -89,7 +91,7 @@ fun CartScreen(cartViewModel: CartViewModel) {
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                Text(text = "Checkout: $${calculateTotal(cart)}")
+                Text(text = stringResource(R.string.checkout_label, calculateTotal(cart)))
             }
         }
     }
@@ -123,7 +125,7 @@ private fun CartItemRow(item: CartItem, viewModel: CartViewModel) {
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "$${"%.2f".format(item.product.price)}",
+                    text = stringResource(R.string.price_format, item.product.price),
                     style = MaterialTheme.typography.bodyMedium
                 )
 
@@ -138,7 +140,7 @@ private fun CartItemRow(item: CartItem, viewModel: CartViewModel) {
                     ) {
                         Icon(
                             imageVector = Icons.Default.Remove,
-                            contentDescription = "Decrease"
+                            contentDescription = stringResource(R.string.decrease_quantity)
                         )
                     }
 
@@ -153,7 +155,7 @@ private fun CartItemRow(item: CartItem, viewModel: CartViewModel) {
                     ) {
                         Icon(
                             imageVector = Icons.Default.Add,
-                            contentDescription = "Increase"
+                            contentDescription = stringResource(R.string.increase_quantity)
                         )
                     }
                 }
@@ -161,7 +163,7 @@ private fun CartItemRow(item: CartItem, viewModel: CartViewModel) {
 
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "Total: $${"%.2f".format(item.product.price * item.quantity)}",
+                text = stringResource(R.string.total_amount, item.product.price * item.quantity),
                 style = MaterialTheme.typography.bodyMedium.copy(
                     color = MaterialTheme.colorScheme.primary
                 )
