@@ -35,6 +35,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.filled.Delete
 
 @Composable
 fun CartScreen(cartViewModel: CartViewModel) {
@@ -167,6 +168,16 @@ private fun CartItemRow(item: CartItem, viewModel: CartViewModel) {
                 style = MaterialTheme.typography.bodyMedium.copy(
                     color = MaterialTheme.colorScheme.primary
                 )
+            )
+        }
+
+        IconButton(
+            onClick = { viewModel.updateQuantity(item.product.productId, 0) }
+        ) {
+            Icon(
+                imageVector = Icons.Default.Delete,
+                contentDescription = "Remove item",
+                tint = MaterialTheme.colorScheme.error
             )
         }
     }
