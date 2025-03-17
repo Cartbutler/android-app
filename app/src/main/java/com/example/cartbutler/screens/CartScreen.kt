@@ -176,7 +176,7 @@ private fun CartItemRow(item: CartItem, viewModel: CartViewModel) {
         ) {
             Icon(
                 imageVector = Icons.Default.Delete,
-                contentDescription = "Remove item",
+                contentDescription = stringResource(R.string.delete_quantity),
                 tint = MaterialTheme.colorScheme.error
             )
         }

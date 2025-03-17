@@ -23,4 +23,5 @@
     <string name="total_amount">Total: $%.2f</string>
     <string name="increase_quantity">aumentar qtd</string>
     <string name="decrease_quantity">diminuir qtd</string>
+    <string name="delete_quantity">deletar item</string>
 </resources>
