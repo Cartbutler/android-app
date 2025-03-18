@@ -17,7 +17,7 @@
     <string name="no_results_category">No products in "%s"</string>
     <string name="no_products">No products found</string>
     <string name="empty_cart">Your cart is empty</string>
-    <string name="checkout_label">Checkout: %s</string>
+    <string name="checkout_label">Checkout</string>
     <string name="price_format">$%.2f</string>
     <string name="total_amount">Total: $%.2f</string>
     <string name="increase_quantity">increase qtd</string>

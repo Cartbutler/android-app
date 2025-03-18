@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.cartbutler.R
 import com.example.cartbutler.viewmodel.CartViewModel
-import com.example.cartbutler.network.networkModels.Cart
 import com.example.cartbutler.network.networkModels.CartItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -92,7 +91,7 @@ fun CartScreen(cartViewModel: CartViewModel) {
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                Text(text = stringResource(R.string.checkout_label, calculateTotal(cart)))
+                Text(text = stringResource(R.string.checkout_label))
             }
         }
     }
@@ -136,7 +135,7 @@ private fun CartItemRow(item: CartItem, viewModel: CartViewModel) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     IconButton(
-                        onClick = { viewModel.updateQuantity(item.product.productId, item.quantity - 1) },
+                        onClick = { viewModel.decrementQuantity(item.product.productId) },
                         enabled = item.quantity > 1
                     ) {
                         Icon(
@@ -152,7 +151,7 @@ private fun CartItemRow(item: CartItem, viewModel: CartViewModel) {
                     )
 
                     IconButton(
-                        onClick = { viewModel.updateQuantity(item.product.productId, item.quantity + 1) }
+                        onClick = { viewModel.incrementQuantity(item.product.productId) }
                     ) {
                         Icon(
                             imageVector = Icons.Default.Add,
@@ -172,7 +171,7 @@ private fun CartItemRow(item: CartItem, viewModel: CartViewModel) {
         }
 
         IconButton(
-            onClick = { viewModel.updateQuantity(item.product.productId, 0) }
+            onClick = { viewModel.removeItem(item.product.productId) }
         ) {
             Icon(
                 imageVector = Icons.Default.Delete,
@@ -181,10 +180,4 @@ private fun CartItemRow(item: CartItem, viewModel: CartViewModel) {
             )
         }
     }
-}
-
-private fun calculateTotal(cart: Cart?): String {
-    return "%.2f".format(
-        cart?.cartItems?.sumOf { (it.product.price * it.quantity).toDouble() } ?: 0.0
-    )
 }
