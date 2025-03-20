@@ -1,6 +1,7 @@
 package com.example.cartbutler.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,8 +14,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -27,20 +34,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.cartbutler.R
-import com.example.cartbutler.viewmodel.CartViewModel
 import com.example.cartbutler.network.networkModels.CartItem
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Remove
-import androidx.compose.material.icons.filled.Delete
+import com.example.cartbutler.viewmodel.CartViewModel
 
 @Composable
 fun CartScreen(cartViewModel: CartViewModel) {
     val cart = cartViewModel.cart.collectAsState().value
     val loading = cartViewModel.loading.collectAsState().value
     val error = cartViewModel.error.collectAsState().value
+    val pendingDeltas = cartViewModel.pendingDeltas.collectAsState().value
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -77,6 +79,7 @@ fun CartScreen(cartViewModel: CartViewModel) {
                         items(cart.cartItems) { item ->
                             CartItemRow(
                                 item = item,
+                                pendingDelta = pendingDeltas[item.product.productId] ?: 0,
                                 viewModel = cartViewModel
                             )
                         }
@@ -85,7 +88,7 @@ fun CartScreen(cartViewModel: CartViewModel) {
             }
 
             Button(
-                onClick = { /* TODO: CREATE CHECKOUT (stores) PAGE */ },
+                onClick = { /* TODO: Implement checkout logic */ },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
@@ -98,7 +101,16 @@ fun CartScreen(cartViewModel: CartViewModel) {
 }
 
 @Composable
-private fun CartItemRow(item: CartItem, viewModel: CartViewModel) {
+private fun CartItemRow(
+    item: CartItem,
+    pendingDelta: Int,
+    viewModel: CartViewModel
+) {
+    val productId = item.product.productId
+    val currentQuantity = item.quantity + pendingDelta
+    val price = item.product.price
+    val totalPrice = price * currentQuantity
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -121,22 +133,26 @@ private fun CartItemRow(item: CartItem, viewModel: CartViewModel) {
                 text = item.product.productName,
                 style = MaterialTheme.typography.titleMedium
             )
+
             Spacer(modifier = Modifier.height(4.dp))
 
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = stringResource(R.string.price_format, item.product.price),
-                    style = MaterialTheme.typography.bodyMedium
-                )
+            Text(
+                text = stringResource(R.string.price_format, price),
+                style = MaterialTheme.typography.bodyMedium
+            )
 
-                Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.height(8.dp))
 
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Quantity Controls
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     IconButton(
-                        onClick = { viewModel.decrementQuantity(item.product.productId) },
-                        enabled = item.quantity > 1
+                        onClick = { viewModel.decrementQuantity(productId) },
+                        enabled = currentQuantity > 1
                     ) {
                         Icon(
                             imageVector = Icons.Default.Remove,
@@ -145,13 +161,13 @@ private fun CartItemRow(item: CartItem, viewModel: CartViewModel) {
                     }
 
                     Text(
-                        text = "${item.quantity}",
-                        style = MaterialTheme.typography.bodyMedium,
+                        text = "$currentQuantity",
+                        style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.padding(horizontal = 8.dp)
                     )
 
                     IconButton(
-                        onClick = { viewModel.incrementQuantity(item.product.productId) }
+                        onClick = { viewModel.incrementQuantity(productId) }
                     ) {
                         Icon(
                             imageVector = Icons.Default.Add,
@@ -159,25 +175,29 @@ private fun CartItemRow(item: CartItem, viewModel: CartViewModel) {
                         )
                     }
                 }
+
+                // Total Price and Delete Button
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = stringResource(R.string.total_amount, totalPrice),
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    )
+
+                    Spacer(modifier = Modifier.width(16.dp))
+
+                    IconButton(
+                        onClick = { viewModel.removeItem(productId) }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = stringResource(R.string.delete_quantity),
+                            tint = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
             }
-
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = stringResource(R.string.total_amount, item.product.price * item.quantity),
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    color = MaterialTheme.colorScheme.primary
-                )
-            )
-        }
-
-        IconButton(
-            onClick = { viewModel.removeItem(item.product.productId) }
-        ) {
-            Icon(
-                imageVector = Icons.Default.Delete,
-                contentDescription = stringResource(R.string.delete_quantity),
-                tint = MaterialTheme.colorScheme.error
-            )
         }
     }
 }
