@@ -109,7 +109,6 @@ private fun CartItemRow(
     val productId = item.product.productId
     val currentQuantity = item.quantity + pendingDelta
     val price = item.product.price
-    val totalPrice = price * currentQuantity
 
     Row(
         modifier = Modifier
@@ -148,7 +147,6 @@ private fun CartItemRow(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Quantity Controls
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     IconButton(
                         onClick = { viewModel.decrementQuantity(productId) },
@@ -176,17 +174,7 @@ private fun CartItemRow(
                     }
                 }
 
-                // Total Price and Delete Button
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = stringResource(R.string.total_amount, totalPrice),
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    )
-
-                    Spacer(modifier = Modifier.width(16.dp))
-
                     IconButton(
                         onClick = { viewModel.removeItem(productId) }
                     ) {

@@ -19,7 +19,6 @@
     <string name="empty_cart">Your cart is empty</string>
     <string name="checkout_label">Checkout</string>
     <string name="price_format">$%.2f</string>
-    <string name="total_amount">Total: $%.2f</string>
     <string name="increase_quantity">increase qtd</string>
     <string name="decrease_quantity">decrease qtd</string>
     <string name="delete_quantity">delete item</string>
