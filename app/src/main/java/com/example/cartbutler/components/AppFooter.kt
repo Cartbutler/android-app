@@ -50,7 +50,7 @@ fun AppFooter(
                     navController.navigate(item.route) {
                         launchSingleTop = true
                         if (item.route == "cart") {
-                            cartViewModel.refreshCartCount()
+                            cartViewModel.refreshCart()
                         }
                     }
                 },

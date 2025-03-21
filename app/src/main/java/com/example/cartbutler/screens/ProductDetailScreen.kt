@@ -64,7 +64,7 @@ fun ProductDetailScreen(
                     product = it,
                     onAddToCart = {
                         scope.launch {
-                            productId?.let { id -> cartViewModel.addToCart(id) }
+                            productId?.let { id -> cartViewModel.incrementQuantity(id) }
                         }
                     }
                 )
