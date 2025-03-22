@@ -36,9 +36,10 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.cartbutler.R
 import com.example.cartbutler.network.networkModels.CartItem
 import com.example.cartbutler.viewmodel.CartViewModel
+import androidx.navigation.NavController
 
 @Composable
-fun CartScreen(cartViewModel: CartViewModel) {
+fun CartScreen(cartViewModel: CartViewModel, navController: NavController) {
     val cart = cartViewModel.cart.collectAsState().value
     val loading = cartViewModel.loading.collectAsState().value
     val error = cartViewModel.error.collectAsState().value
@@ -88,7 +89,7 @@ fun CartScreen(cartViewModel: CartViewModel) {
             }
 
             Button(
-                onClick = { /* TODO: Implement checkout logic */ },
+                onClick = { navController.navigate("storeResults") },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()

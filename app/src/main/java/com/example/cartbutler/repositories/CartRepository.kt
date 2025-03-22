@@ -5,6 +5,7 @@ import com.example.cartbutler.network.ApiService
 import com.example.cartbutler.network.SessionManager
 import com.example.cartbutler.network.networkModels.Cart
 import com.example.cartbutler.network.networkModels.AddToCartRequest
+import com.example.cartbutler.network.networkModels.ShoppingResultsResponse
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -24,8 +25,7 @@ class CartRepository(
                 quantity = quantity
             )
 
-            val cart = apiService.addToCart(request)
-            return cart
+            return apiService.addToCart(request)
 
         } catch (e: HttpException) {
             val errorMsg = "HTTP error ${e.code()} - ${e.response()?.errorBody()?.string()}"
@@ -66,6 +66,26 @@ class CartRepository(
         } catch (e: Exception) {
             Log.e("CartRepository", "Unexpected error: ${e.javaClass.simpleName}", e)
             throw Exception("Error: ${e.message}")
+        }
+    }
+
+    suspend fun getShoppingResults(cartId: Int): List<ShoppingResultsResponse> {
+        try {
+            val userId = sessionManager.getSessionId()
+            return apiService.getShoppingResults(cartId, userId)
+
+        } catch (e: HttpException) {
+            val errorMsg = "HTTP error ${e.code()} - ${e.response()?.errorBody()?.string()}"
+            Log.e("CartRepository", errorMsg, e)
+            throw Exception("Error fetching results: ${e.message}")
+
+        } catch (e: IOException) {
+            Log.e("CartRepository", "Network error: ${e.message}", e)
+            throw Exception("Check your connection")
+
+        } catch (e: Exception) {
+            Log.e("CartRepository", "Error: ${e.message}", e)
+            throw e
         }
     }
 }

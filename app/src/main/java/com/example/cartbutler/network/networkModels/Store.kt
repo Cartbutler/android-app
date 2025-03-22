@@ -5,5 +5,6 @@ data class Store(
     val storeName: String,
     val storeLocation: String,
     val price: String? = null,
-    val stock: Int? = null
+    val stock: Int? = null,
+    val imagePath: String? = null
 )

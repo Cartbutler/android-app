@@ -5,6 +5,7 @@ import com.example.cartbutler.network.networkModels.Product
 import com.example.cartbutler.network.networkModels.Cart
 import com.example.cartbutler.network.networkModels.AddToCartRequest
 import com.example.cartbutler.network.networkModels.ProductSuggestion
+import com.example.cartbutler.network.networkModels.ShoppingResultsResponse
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
@@ -44,4 +45,11 @@ interface ApiService {
     suspend fun addToCart(
         @Body addToCartRequest: AddToCartRequest
     ): Cart
+
+    // Fetch shopping results
+    @GET("shopping-results")
+    suspend fun getShoppingResults(
+        @Query("cartId") cartId: Int,
+        @Query("userId") userId: String
+    ): List<ShoppingResultsResponse>
 }

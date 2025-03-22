@@ -23,6 +23,7 @@ import com.example.cartbutler.ui.theme.CartbutlerTheme
 import com.example.cartbutler.viewmodel.CartViewModel
 import com.example.cartbutler.network.RetrofitInstance
 import androidx.compose.runtime.remember
+import com.example.cartbutler.screens.StoreResultsScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : ComponentActivity() {
@@ -53,7 +54,14 @@ class MainActivity : ComponentActivity() {
                             HomePage(navController = navController)
                         }
                         composable("cart") {
-                            CartScreen(cartViewModel = cartViewModel)
+                            CartScreen(cartViewModel = cartViewModel,
+                            navController = navController)
+                        }
+                        composable("storeResults") {
+                            StoreResultsScreen(
+                                cartViewModel = cartViewModel,
+                                navController = navController
+                            )
                         }
                         composable("profile") {
                             ProfileScreen()

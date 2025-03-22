@@ -22,4 +22,6 @@
     <string name="increase_quantity">increase qtd</string>
     <string name="decrease_quantity">decrease qtd</string>
     <string name="delete_quantity">delete item</string>
+    <string name="no_stores_available">No stores available</string>
+    <string name="items">Items</string>
 </resources>
