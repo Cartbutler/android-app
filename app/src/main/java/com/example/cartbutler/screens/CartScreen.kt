@@ -37,6 +37,7 @@ import com.example.cartbutler.R
 import com.example.cartbutler.network.networkModels.CartItem
 import com.example.cartbutler.viewmodel.CartViewModel
 import androidx.navigation.NavController
+import com.example.cartbutler.components.formatCurrency
 
 @Composable
 fun CartScreen(cartViewModel: CartViewModel, navController: NavController) {
@@ -109,7 +110,11 @@ private fun CartItemRow(
 ) {
     val productId = item.products.productId
     val currentQuantity = item.quantity + pendingDelta
-    val price = item.products.price
+    val minPrice = item.products.minPrice ?: 0f
+    val maxPrice = item.products.maxPrice ?: 0f
+
+    val priceText = if (minPrice != maxPrice) "${formatCurrency(minPrice)} - ${formatCurrency(maxPrice)}"
+    else formatCurrency(minPrice)
 
     Row(
         modifier = Modifier
@@ -137,7 +142,7 @@ private fun CartItemRow(
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                text = stringResource(R.string.price_format, price),
+                text = priceText,
                 style = MaterialTheme.typography.bodyMedium
             )
 
