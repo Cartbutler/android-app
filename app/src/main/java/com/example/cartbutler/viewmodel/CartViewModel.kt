@@ -125,7 +125,7 @@ class CartViewModel(
                 _loading.value = true
                 val cart = repository.getCart()
                 _cart.value = cart
-                _cartItemsCount.value = cart.cartItems.sumOf { it.quantity }
+                _cartItemsCount.value = cart.cartItems.size
             } catch (e: Exception) {
                 _error.value = "Error loading cart: ${e.message}"
             } finally {
@@ -140,7 +140,7 @@ class CartViewModel(
                 _loading.value = true
                 val cart = repository.getCart()
                 _cart.value = cart
-                _cartItemsCount.value = cart.cartItems.sumOf { it.quantity }
+                _cartItemsCount.value = cart.cartItems.size
                 loadShoppingResults(cart.id)
             } catch (e: Exception) {
                 _error.value = "Error refreshing cart: ${e.message}"
