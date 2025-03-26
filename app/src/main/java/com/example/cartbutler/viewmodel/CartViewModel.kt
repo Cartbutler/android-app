@@ -87,7 +87,7 @@ class CartViewModel(
     }
 
     private suspend fun performDeltaUpdate(productId: Int, delta: Int) {
-        val currentQuantity = _cart.value?.cartItems?.find { it.product.productId == productId }?.quantity ?: 0
+        val currentQuantity = _cart.value?.cartItems?.find { it.products.productId == productId }?.quantity ?: 0
         val newQuantity = currentQuantity + delta
         if (newQuantity < 0) return
 

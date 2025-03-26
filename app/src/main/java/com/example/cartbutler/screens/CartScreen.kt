@@ -80,7 +80,7 @@ fun CartScreen(cartViewModel: CartViewModel, navController: NavController) {
                         items(cart.cartItems) { item ->
                             CartItemRow(
                                 item = item,
-                                pendingDelta = pendingDeltas[item.product.productId] ?: 0,
+                                pendingDelta = pendingDeltas[item.products.productId] ?: 0,
                                 viewModel = cartViewModel
                             )
                         }
@@ -107,9 +107,9 @@ private fun CartItemRow(
     pendingDelta: Int,
     viewModel: CartViewModel
 ) {
-    val productId = item.product.productId
+    val productId = item.products.productId
     val currentQuantity = item.quantity + pendingDelta
-    val price = item.product.price
+    val price = item.products.price
 
     Row(
         modifier = Modifier
@@ -118,7 +118,7 @@ private fun CartItemRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            painter = rememberAsyncImagePainter(model = item.product.imagePath),
+            painter = rememberAsyncImagePainter(model = item.products.imagePath),
             contentDescription = null,
             modifier = Modifier.size(80.dp),
             contentScale = ContentScale.Crop
@@ -130,7 +130,7 @@ private fun CartItemRow(
             modifier = Modifier.weight(1f)
         ) {
             Text(
-                text = item.product.productName,
+                text = item.products.productName,
                 style = MaterialTheme.typography.titleMedium
             )
 
