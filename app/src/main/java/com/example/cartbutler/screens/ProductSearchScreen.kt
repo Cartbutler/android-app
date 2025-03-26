@@ -121,7 +121,9 @@ fun ProductSearchScreen(
                         items(products) { product ->
                             ProductItem(
                                 productName = product.productName,
-                                price = formatCurrency(product.price),
+                                price = if ((product.minPrice ?: 0f) != (product.maxPrice ?: 0f))
+                                    "${formatCurrency(product.minPrice ?: 0f)} - ${formatCurrency(product.maxPrice ?: 0f)}"
+                                else formatCurrency(product.minPrice ?: 0f),
                                 imageUrl = product.imagePath,
                                 onClick = {
                                     navController.navigate("productDetail/${product.productId}")
