@@ -28,4 +28,8 @@
     <string name="other_stores">Other Stores</string>
     <string name="prices_from_stores">Price in store</string>
     <string name="store_not_found">Store not found</string>
+    <string name="unique_items">Items:</string>
+    <string name="estimated_total">Total:</string>
+    <string name="your_products">Seus Produtos</string>
+    <string name="quantity">Quantity: %d</string>
 </resources>
