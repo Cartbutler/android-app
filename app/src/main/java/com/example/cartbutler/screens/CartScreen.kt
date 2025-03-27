@@ -36,9 +36,11 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.cartbutler.R
 import com.example.cartbutler.network.networkModels.CartItem
 import com.example.cartbutler.viewmodel.CartViewModel
+import androidx.navigation.NavController
+import com.example.cartbutler.components.formatCurrency
 
 @Composable
-fun CartScreen(cartViewModel: CartViewModel) {
+fun CartScreen(cartViewModel: CartViewModel, navController: NavController) {
     val cart = cartViewModel.cart.collectAsState().value
     val loading = cartViewModel.loading.collectAsState().value
     val error = cartViewModel.error.collectAsState().value
@@ -79,7 +81,7 @@ fun CartScreen(cartViewModel: CartViewModel) {
                         items(cart.cartItems) { item ->
                             CartItemRow(
                                 item = item,
-                                pendingDelta = pendingDeltas[item.product.productId] ?: 0,
+                                pendingDelta = pendingDeltas[item.products.productId] ?: 0,
                                 viewModel = cartViewModel
                             )
                         }
@@ -88,7 +90,7 @@ fun CartScreen(cartViewModel: CartViewModel) {
             }
 
             Button(
-                onClick = { /* TODO: Implement checkout logic */ },
+                onClick = { navController.navigate("storeResults") },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
@@ -106,9 +108,13 @@ private fun CartItemRow(
     pendingDelta: Int,
     viewModel: CartViewModel
 ) {
-    val productId = item.product.productId
+    val productId = item.products.productId
     val currentQuantity = item.quantity + pendingDelta
-    val price = item.product.price
+    val minPrice = item.products.minPrice ?: 0f
+    val maxPrice = item.products.maxPrice ?: 0f
+
+    val priceText = if (minPrice != maxPrice) "${formatCurrency(minPrice)} - ${formatCurrency(maxPrice)}"
+    else formatCurrency(minPrice)
 
     Row(
         modifier = Modifier
@@ -117,7 +123,7 @@ private fun CartItemRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            painter = rememberAsyncImagePainter(model = item.product.imagePath),
+            painter = rememberAsyncImagePainter(model = item.products.imagePath),
             contentDescription = null,
             modifier = Modifier.size(80.dp),
             contentScale = ContentScale.Crop
@@ -129,14 +135,14 @@ private fun CartItemRow(
             modifier = Modifier.weight(1f)
         ) {
             Text(
-                text = item.product.productName,
+                text = item.products.productName,
                 style = MaterialTheme.typography.titleMedium
             )
 
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                text = stringResource(R.string.price_format, price),
+                text = priceText,
                 style = MaterialTheme.typography.bodyMedium
             )
 

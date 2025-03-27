@@ -3,6 +3,8 @@ package com.example.cartbutler.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cartbutler.network.networkModels.Cart
+import com.example.cartbutler.network.networkModels.StoreWithTotals
+import com.example.cartbutler.network.networkModels.Store
 import com.example.cartbutler.repositories.CartRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -21,6 +23,9 @@ class CartViewModel(
 
     private val _pendingDeltas = MutableStateFlow<Map<Int, Int>>(emptyMap())
     val pendingDeltas: StateFlow<Map<Int, Int>> = _pendingDeltas.asStateFlow()
+
+    private val _storeResults = MutableStateFlow<List<StoreWithTotals>>(emptyList())
+    val storeResults: StateFlow<List<StoreWithTotals>> = _storeResults.asStateFlow()
 
     private val _loading = MutableStateFlow(false)
     val loading: StateFlow<Boolean> = _loading.asStateFlow()
@@ -82,7 +87,7 @@ class CartViewModel(
     }
 
     private suspend fun performDeltaUpdate(productId: Int, delta: Int) {
-        val currentQuantity = _cart.value?.cartItems?.find { it.product.productId == productId }?.quantity ?: 0
+        val currentQuantity = _cart.value?.cartItems?.find { it.products.productId == productId }?.quantity ?: 0
         val newQuantity = currentQuantity + delta
         if (newQuantity < 0) return
 
@@ -120,7 +125,7 @@ class CartViewModel(
                 _loading.value = true
                 val cart = repository.getCart()
                 _cart.value = cart
-                _cartItemsCount.value = cart.cartItems.sumOf { it.quantity }
+                _cartItemsCount.value = cart.cartItems.size
             } catch (e: Exception) {
                 _error.value = "Error loading cart: ${e.message}"
             } finally {
@@ -135,12 +140,35 @@ class CartViewModel(
                 _loading.value = true
                 val cart = repository.getCart()
                 _cart.value = cart
-                _cartItemsCount.value = cart.cartItems.sumOf { it.quantity }
+                _cartItemsCount.value = cart.cartItems.size
+                loadShoppingResults(cart.id)
             } catch (e: Exception) {
                 _error.value = "Error refreshing cart: ${e.message}"
             } finally {
                 _loading.value = false
             }
+        }
+    }
+
+    private suspend fun loadShoppingResults(cartId: Int) {
+        try {
+            val results = repository.getShoppingResults(cartId)
+            _storeResults.value = results.map { response ->
+                StoreWithTotals(
+                    store = Store(
+                        storeId = response.storeId,
+                        storeName = response.storeName,
+                        storeLocation = response.storeLocation,
+                        price = response.total.toString(),
+                        stock = null,
+                        storeImage = response.storeImage
+                    ),
+                    totalItems = response.products.sumOf { it.quantity },
+                    totalPrice = response.total.toFloat()
+                )
+            }
+        } catch (e: Exception) {
+            _error.value = "Error loading stores: ${e.message}"
         }
     }
 }

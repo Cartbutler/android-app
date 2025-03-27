@@ -1,7 +1,7 @@
 package com.example.cartbutler.network.networkModels
 
-data class AddToCartRequest(
-    val userId: String,
-    val productId: Int,
+data class StoreProduct(
+    val productName: String,
+    val price: Double,
     val quantity: Int
 )

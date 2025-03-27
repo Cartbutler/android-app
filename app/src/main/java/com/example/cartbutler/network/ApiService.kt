@@ -5,6 +5,7 @@ import com.example.cartbutler.network.networkModels.Product
 import com.example.cartbutler.network.networkModels.Cart
 import com.example.cartbutler.network.networkModels.AddToCartRequest
 import com.example.cartbutler.network.networkModels.ProductSuggestion
+import com.example.cartbutler.network.networkModels.ShoppingResultsResponse
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
@@ -26,7 +27,7 @@ interface ApiService {
     @GET("search")
     suspend fun searchProducts(
         @Query("query") query: String?,
-        @Query("categoryID") categoryID: Int? = null
+        @Query("category_id") categoryID: Int? = null
     ): List<Product>
 
     // Return single product
@@ -36,7 +37,7 @@ interface ApiService {
     // Return cart for user
     @GET("cart")
     suspend fun getCart(
-        @Query("userId") userId: String
+        @Query("user_id") userId: String
     ): Cart
 
     // Add product to cart
@@ -44,4 +45,11 @@ interface ApiService {
     suspend fun addToCart(
         @Body addToCartRequest: AddToCartRequest
     ): Cart
+
+    // Fetch shopping results
+    @GET("shopping-results")
+    suspend fun getShoppingResults(
+        @Query("cart_id") cartId: Int,
+        @Query("user_id") userId: String
+    ): List<ShoppingResultsResponse>
 }
