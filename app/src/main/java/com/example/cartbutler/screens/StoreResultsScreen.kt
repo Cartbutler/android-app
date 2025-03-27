@@ -151,7 +151,7 @@ private fun StoreItem(storeWithTotals: StoreWithTotals, onClick: () -> Unit, isB
                     painter = rememberAsyncImagePainter(storeWithTotals.store.storeImage ?: ""),
                     contentDescription = null,
                     modifier = Modifier.size(64.dp),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Fit
                 )
                 Spacer(Modifier.width(16.dp))
                 Column {

@@ -3,6 +3,7 @@ package com.example.cartbutler.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,12 +15,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Remove
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -31,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.cartbutler.R
@@ -65,11 +69,7 @@ fun CartScreen(cartViewModel: CartViewModel, navController: NavController) {
                 }
 
                 cart == null || cart.cartItems.isEmpty() -> {
-                    Text(
-                        text = stringResource(R.string.empty_cart),
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.align(Alignment.Center)
-                    )
+                    EmptyCartMessage()
                 }
 
                 else -> {
@@ -78,6 +78,11 @@ fun CartScreen(cartViewModel: CartViewModel, navController: NavController) {
                             .fillMaxSize()
                             .padding(bottom = 80.dp)
                     ) {
+                        item {
+                            HeaderTitle()
+                            Spacer(modifier = Modifier.height(8.dp))
+                        }
+
                         items(cart.cartItems) { item ->
                             CartItemRow(
                                 item = item,
@@ -89,16 +94,64 @@ fun CartScreen(cartViewModel: CartViewModel, navController: NavController) {
                 }
             }
 
-            Button(
-                onClick = { navController.navigate("storeResults") },
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Text(text = stringResource(R.string.checkout_label))
-            }
+            CheckoutButton(navController)
         }
+    }
+}
+
+@Composable
+private fun HeaderTitle() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp)
+    ) {
+        Text(
+            text = "Your Cart",
+            style = MaterialTheme.typography.headlineMedium.copy(
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary
+            )
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        HorizontalDivider(
+            thickness = 1.dp,
+            color = MaterialTheme.colorScheme.outlineVariant
+        )
+    }
+}
+
+@Composable
+private fun BoxScope.CheckoutButton(navController: NavController) {
+    FilledTonalButton(
+        onClick = { navController.navigate("storeResults") },
+        modifier = Modifier
+            .align(Alignment.BottomCenter)
+            .fillMaxWidth()
+            .padding(16.dp)
+            .height(56.dp),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.checkout_label),
+            style = MaterialTheme.typography.titleMedium
+        )
+    }
+}
+
+@Composable
+private fun EmptyCartMessage() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = stringResource(R.string.empty_cart),
+            style = MaterialTheme.typography.titleLarge.copy(
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+            )
+        )
     }
 }
 
@@ -116,71 +169,77 @@ private fun CartItemRow(
     val priceText = if (minPrice != maxPrice) "${formatCurrency(minPrice)} - ${formatCurrency(maxPrice)}"
     else formatCurrency(minPrice)
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
+    Surface(
+        shape = RoundedCornerShape(12.dp),
+        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+        tonalElevation = 2.dp
     ) {
-        Image(
-            painter = rememberAsyncImagePainter(model = item.products.imagePath),
-            contentDescription = null,
-            modifier = Modifier.size(80.dp),
-            contentScale = ContentScale.Crop
-        )
-
-        Spacer(modifier = Modifier.width(16.dp))
-
-        Column(
-            modifier = Modifier.weight(1f)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = item.products.productName,
-                style = MaterialTheme.typography.titleMedium
+            Image(
+                painter = rememberAsyncImagePainter(model = item.products.imagePath),
+                contentDescription = null,
+                modifier = Modifier.size(80.dp),
+                contentScale = ContentScale.Crop
             )
 
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.width(16.dp))
 
-            Text(
-                text = priceText,
-                style = MaterialTheme.typography.bodyMedium
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+            Column(
+                modifier = Modifier.weight(1f)
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    IconButton(
-                        onClick = { viewModel.decrementQuantity(productId) },
-                        enabled = currentQuantity > 1
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Remove,
-                            contentDescription = stringResource(R.string.decrease_quantity)
-                        )
-                    }
+                Text(
+                    text = item.products.productName,
+                    style = MaterialTheme.typography.titleMedium
+                )
 
-                    Text(
-                        text = "$currentQuantity",
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.padding(horizontal = 8.dp)
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
+                    text = priceText,
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = MaterialTheme.colorScheme.primary
                     )
+                )
 
-                    IconButton(
-                        onClick = { viewModel.incrementQuantity(productId) }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = stringResource(R.string.increase_quantity)
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        IconButton(
+                            onClick = { viewModel.decrementQuantity(productId) },
+                            enabled = currentQuantity > 1
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Remove,
+                                contentDescription = stringResource(R.string.decrease_quantity)
+                            )
+                        }
+
+                        Text(
+                            text = "$currentQuantity",
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.padding(horizontal = 8.dp)
                         )
-                    }
-                }
 
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                        IconButton(
+                            onClick = { viewModel.incrementQuantity(productId) }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = stringResource(R.string.increase_quantity)
+                            )
+                        }
+                    }
+
                     IconButton(
                         onClick = { viewModel.removeItem(productId) }
                     ) {
