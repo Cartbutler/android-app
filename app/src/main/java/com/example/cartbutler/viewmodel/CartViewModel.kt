@@ -161,7 +161,7 @@ class CartViewModel(
                         storeLocation = response.storeLocation,
                         price = response.total.toString(),
                         stock = null,
-                        imagePath = null
+                        storeImage = response.storeImage
                     ),
                     totalItems = response.products.sumOf { it.quantity },
                     totalPrice = response.total.toFloat()

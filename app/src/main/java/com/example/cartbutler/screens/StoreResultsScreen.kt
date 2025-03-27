@@ -148,7 +148,7 @@ private fun StoreItem(storeWithTotals: StoreWithTotals, onClick: () -> Unit, isB
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Image(
-                    painter = rememberAsyncImagePainter(storeWithTotals.store.imagePath ?: ""),
+                    painter = rememberAsyncImagePainter(storeWithTotals.store.storeImage ?: ""),
                     contentDescription = null,
                     modifier = Modifier.size(64.dp),
                     contentScale = ContentScale.Crop

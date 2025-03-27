@@ -4,6 +4,7 @@ data class ShoppingResultsResponse(
     val storeId: Int,
     val storeName: String,
     val storeLocation: String,
+    val storeImage: String?,
     val products: List<StoreProduct>,
     val total: Double
 )
