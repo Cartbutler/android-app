@@ -24,4 +24,6 @@
     <string name="delete_quantity">delete item</string>
     <string name="no_stores_available">No stores available</string>
     <string name="items">Items</string>
+    <string name="best_deal">Best Deal</string>
+    <string name="other_stores">Other Stores</string>
 </resources>

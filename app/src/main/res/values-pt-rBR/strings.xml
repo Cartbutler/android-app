@@ -23,4 +23,6 @@
     <string name="increase_quantity">aumentar qtd</string>
     <string name="decrease_quantity">diminuir qtd</string>
     <string name="delete_quantity">deletar item</string>
+    <string name="best_deal">Melhor Preço</string>
+    <string name="other_stores">Outras Lojas</string>
 </resources>

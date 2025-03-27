@@ -2,6 +2,7 @@ package com.example.cartbutler.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,9 +14,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -25,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
@@ -37,6 +42,9 @@ fun StoreResultsScreen(cartViewModel: CartViewModel, navController: NavControlle
     val storeResults = cartViewModel.storeResults.collectAsState().value
     val loading = cartViewModel.loading.collectAsState().value
     val error = cartViewModel.error.collectAsState().value
+
+    val bestDeal = storeResults.minByOrNull { it.totalPrice }
+    val otherStores = storeResults.filterNot { it == bestDeal }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -56,11 +64,60 @@ fun StoreResultsScreen(cartViewModel: CartViewModel, navController: NavControlle
                     modifier = Modifier.align(Alignment.Center)
                 )
                 else -> LazyColumn(modifier = Modifier.fillMaxSize()) {
-                    items(storeResults) { storeWithTotals ->
-                        StoreItem(
-                            storeWithTotals = storeWithTotals,
-                            onClick = { /* TODO: Navigate to checkout */ }
-                        )
+                    item {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { navController.popBackStack() }
+                                .padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = stringResource(R.string.back_button),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                            Spacer(Modifier.width(8.dp))
+                        }
+                    }
+
+                    bestDeal?.let {
+                        item {
+                            Text(
+                                text = stringResource(R.string.best_deal),
+                                style = MaterialTheme.typography.headlineSmall.copy(
+                                    fontWeight = FontWeight.Bold),
+                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                            )
+                        }
+                        item {
+                            StoreItem(
+                                storeWithTotals = it,
+                                onClick = { /* TODO: Navigate to checkout */ },
+                                isBestDeal = true
+                            )
+                        }
+                    }
+
+                    if (otherStores.isNotEmpty()) {
+                        item {
+                            Text(
+                                text = stringResource(R.string.other_stores),
+                                style = MaterialTheme.typography.headlineSmall.copy(
+                                    fontWeight = FontWeight.Bold),
+                                modifier = Modifier.padding(
+                                    horizontal = 16.dp,
+                                    vertical = 16.dp
+                                )
+                            )
+                        }
+                        items(otherStores) { store ->
+                            StoreItem(
+                                storeWithTotals = store,
+                                onClick = { /* TODO: Navigate to checkout */ },
+                                isBestDeal = false
+                            )
+                        }
                     }
                 }
             }
@@ -69,45 +126,55 @@ fun StoreResultsScreen(cartViewModel: CartViewModel, navController: NavControlle
 }
 
 @Composable
-private fun StoreItem(storeWithTotals: StoreWithTotals, onClick: () -> Unit) {
+private fun StoreItem(storeWithTotals: StoreWithTotals, onClick: () -> Unit, isBestDeal: Boolean) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
             .clickable { onClick() },
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = if (isBestDeal) 8.dp else 4.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = if (isBestDeal) MaterialTheme.colorScheme.primaryContainer
+            else MaterialTheme.colorScheme.surface
+        )
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Image(
-                painter = rememberAsyncImagePainter(storeWithTotals.store.imagePath ?: ""),
-                contentDescription = null,
-                modifier = Modifier.size(80.dp),
-                contentScale = ContentScale.Crop
-            )
-
-            Spacer(Modifier.width(16.dp))
-
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = storeWithTotals.store.storeName,
-                    style = MaterialTheme.typography.titleMedium)
-                Text(
-                    text = storeWithTotals.store.storeLocation,
-                    style = MaterialTheme.typography.bodyMedium)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Image(
+                    painter = rememberAsyncImagePainter(storeWithTotals.store.imagePath ?: ""),
+                    contentDescription = null,
+                    modifier = Modifier.size(64.dp),
+                    contentScale = ContentScale.Crop
+                )
+                Spacer(Modifier.width(16.dp))
+                Column {
+                    Text(
+                        text = storeWithTotals.store.storeName,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold)
+                    Text(
+                        text = storeWithTotals.store.storeLocation,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
+                }
             }
 
             Column(horizontalAlignment = Alignment.End) {
                 Text(
                     text = "$${"%.2f".format(storeWithTotals.totalPrice)}",
-                    style = MaterialTheme.typography.titleMedium)
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold)
                 Text(
                     text = "${storeWithTotals.totalItems} ${stringResource(R.string.items)}",
-                    style = MaterialTheme.typography.bodyMedium)
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
             }
         }
     }
