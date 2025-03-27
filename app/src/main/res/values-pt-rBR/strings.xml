@@ -28,4 +28,5 @@
     <string name="best_deal">Melhor Preço</string>
     <string name="other_stores">Outras Lojas</string>
     <string name="prices_from_stores">Preços das lojas</string>
+    <string name="store_not_found">Loja não encontrada</string>
 </resources>

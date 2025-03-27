@@ -27,4 +27,5 @@
     <string name="best_deal">Best Deal</string>
     <string name="other_stores">Other Stores</string>
     <string name="prices_from_stores">Price in store</string>
+    <string name="store_not_found">Store not found</string>
 </resources>

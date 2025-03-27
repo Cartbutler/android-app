@@ -1,10 +1,13 @@
 package com.example.cartbutler.viewmodel
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cartbutler.network.networkModels.Cart
-import com.example.cartbutler.network.networkModels.StoreWithTotals
+import com.example.cartbutler.network.networkModels.ShoppingResultsResponse
 import com.example.cartbutler.network.networkModels.Store
+import com.example.cartbutler.network.networkModels.StoreWithTotals
 import com.example.cartbutler.repositories.CartRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -35,6 +38,9 @@ class CartViewModel(
 
     private val _cartItemsCount = MutableStateFlow(0)
     val cartItemsCount: StateFlow<Int> = _cartItemsCount.asStateFlow()
+
+    private val _selectedStoreProducts = mutableStateOf<ShoppingResultsResponse?>(null)
+    val selectedStoreProducts: State<ShoppingResultsResponse?> = _selectedStoreProducts
 
     private val debounceJobs = mutableMapOf<Int, Job>()
 
@@ -169,6 +175,22 @@ class CartViewModel(
             }
         } catch (e: Exception) {
             _error.value = "Error loading stores: ${e.message}"
+        }
+    }
+
+    fun loadStoreProducts(storeId: Int) {
+        viewModelScope.launch {
+            try {
+                _loading.value = true
+                val cartId = _cart.value?.id ?: throw Exception("Cart ID not available")
+                val results = repository.getShoppingResults(cartId)
+                _selectedStoreProducts.value = results.find { it.storeId == storeId }
+                _error.value = null
+            } catch (e: Exception) {
+                _error.value = e.message ?: "Error loading store products"
+            } finally {
+                _loading.value = false
+            }
         }
     }
 }

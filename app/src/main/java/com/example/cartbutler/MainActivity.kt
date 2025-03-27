@@ -19,6 +19,7 @@ import com.example.cartbutler.screens.HomePage
 import com.example.cartbutler.screens.ProductDetailScreen
 import com.example.cartbutler.screens.ProductSearchScreen
 import com.example.cartbutler.screens.ProfileScreen
+import com.example.cartbutler.screens.StoreCartScreen
 import com.example.cartbutler.ui.theme.CartbutlerTheme
 import com.example.cartbutler.viewmodel.CartViewModel
 import com.example.cartbutler.network.RetrofitInstance
@@ -92,6 +93,14 @@ class MainActivity : ComponentActivity() {
                                 navController = navController,
                                 productId = productId,
                                 cartViewModel = cartViewModel
+                            )
+                        }
+                        composable("storeCart/{storeId}") { backStackEntry ->
+                            val storeId = backStackEntry.arguments?.getString("storeId")?.toIntOrNull()
+                            StoreCartScreen(
+                                navController = navController,
+                                cartViewModel = cartViewModel,
+                                storeId = storeId
                             )
                         }
                     }

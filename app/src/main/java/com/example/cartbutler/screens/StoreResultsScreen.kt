@@ -93,7 +93,10 @@ fun StoreResultsScreen(cartViewModel: CartViewModel, navController: NavControlle
                         item {
                             StoreItem(
                                 storeWithTotals = it,
-                                onClick = { /* TODO: Navigate to checkout */ },
+                                onClick = {
+                                    navController.navigate("storeCart/${it.store.storeId}")
+                                    cartViewModel.loadStoreProducts(it.store.storeId!!)
+                                },
                                 isBestDeal = true
                             )
                         }
@@ -114,7 +117,10 @@ fun StoreResultsScreen(cartViewModel: CartViewModel, navController: NavControlle
                         items(otherStores) { store ->
                             StoreItem(
                                 storeWithTotals = store,
-                                onClick = { /* TODO: Navigate to checkout */ },
+                                onClick = {
+                                    navController.navigate("storeCart/${store.store.storeId}")
+                                    cartViewModel.loadStoreProducts(store.store.storeId!!)
+                                },
                                 isBestDeal = false
                             )
                         }
