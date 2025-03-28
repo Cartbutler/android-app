@@ -96,11 +96,9 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable("storeCart/{storeId}") { backStackEntry ->
-                            val storeId = backStackEntry.arguments?.getString("storeId")?.toIntOrNull()
                             StoreCartScreen(
                                 navController = navController,
-                                cartViewModel = cartViewModel,
-                                storeId = storeId
+                                cartViewModel = cartViewModel
                             )
                         }
                     }
