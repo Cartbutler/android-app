@@ -58,11 +58,6 @@ fun StoreResultsScreen(cartViewModel: CartViewModel, navController: NavControlle
                     text = "Add items to your cart to see store results",
                     modifier = Modifier.align(Alignment.Center)
                 )
-                storeResults.isEmpty() -> Text(
-                    text = stringResource(R.string.no_stores_available),
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.align(Alignment.Center)
-                )
                 else -> LazyColumn(modifier = Modifier.fillMaxSize()) {
                     item {
                         Row(
@@ -94,8 +89,20 @@ fun StoreResultsScreen(cartViewModel: CartViewModel, navController: NavControlle
                             StoreItem(
                                 storeWithTotals = it,
                                 onClick = {
-                                    navController.navigate("storeCart/${it.store.storeId}")
-                                    cartViewModel.loadStoreProducts(it.store.storeId!!)
+                                    val storeResponse = cartViewModel.storeResults.value
+                                        .map { storeWithTotals ->
+                                            cartViewModel._shoppingResultsResponses.value.find { response ->
+                                                response.storeId == storeWithTotals.store.storeId
+                                            }
+                                        }
+                                        .firstOrNull { response ->
+                                            response?.storeId == it.store.storeId
+                                        }
+
+                                    storeResponse?.let { response ->
+                                        cartViewModel._selectedStoreProducts.value = response
+                                        navController.navigate("storeCart/${response.storeId}")
+                                    }
                                 },
                                 isBestDeal = true
                             )
@@ -118,8 +125,20 @@ fun StoreResultsScreen(cartViewModel: CartViewModel, navController: NavControlle
                             StoreItem(
                                 storeWithTotals = store,
                                 onClick = {
-                                    navController.navigate("storeCart/${store.store.storeId}")
-                                    cartViewModel.loadStoreProducts(store.store.storeId!!)
+                                    val storeResponse = cartViewModel.storeResults.value
+                                        .map { storeWithTotals ->
+                                            cartViewModel._shoppingResultsResponses.value.find { response ->
+                                                response.storeId == storeWithTotals.store.storeId
+                                            }
+                                        }
+                                        .firstOrNull { response ->
+                                            response?.storeId == store.store.storeId
+                                        }
+
+                                    storeResponse?.let { response ->
+                                        cartViewModel._selectedStoreProducts.value = response
+                                        navController.navigate("storeCart/${response.storeId}")
+                                    }
                                 },
                                 isBestDeal = false
                             )

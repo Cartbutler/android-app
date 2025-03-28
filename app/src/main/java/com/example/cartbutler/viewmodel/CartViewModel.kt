@@ -40,8 +40,10 @@ class CartViewModel(
     private val _cartItemsCount = MutableStateFlow(0)
     val cartItemsCount: StateFlow<Int> = _cartItemsCount.asStateFlow()
 
-    private val _selectedStoreProducts = mutableStateOf<ShoppingResultsResponse?>(null)
+    val _selectedStoreProducts = mutableStateOf<ShoppingResultsResponse?>(null)
     val selectedStoreProducts: State<ShoppingResultsResponse?> = _selectedStoreProducts
+
+    val _shoppingResultsResponses = MutableStateFlow<List<ShoppingResultsResponse>>(emptyList())
 
     private val debounceJobs = mutableMapOf<Int, Job>()
 
@@ -166,6 +168,7 @@ class CartViewModel(
     private suspend fun loadShoppingResults(cartId: Int) {
         try {
             val results = repository.getShoppingResults(cartId)
+            _shoppingResultsResponses.value = results
             _storeResults.value = results.map { response ->
                 StoreWithTotals(
                     store = Store(
@@ -182,22 +185,6 @@ class CartViewModel(
             }
         } catch (e: Exception) {
             _error.value = "Error loading stores: ${e.message}"
-        }
-    }
-
-    fun loadStoreProducts(storeId: Int) {
-        viewModelScope.launch {
-            try {
-                _loading.value = true
-                val cartId = _cart.value?.id ?: throw Exception("Cart ID not available")
-                val results = repository.getShoppingResults(cartId)
-                _selectedStoreProducts.value = results.find { it.storeId == storeId }
-                _error.value = null
-            } catch (e: Exception) {
-                _error.value = e.message ?: "Error loading store products"
-            } finally {
-                _loading.value = false
-            }
         }
     }
 }
