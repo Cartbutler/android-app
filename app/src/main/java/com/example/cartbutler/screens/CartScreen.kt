@@ -42,6 +42,7 @@ import com.example.cartbutler.network.networkModels.CartItem
 import com.example.cartbutler.viewmodel.CartViewModel
 import androidx.navigation.NavController
 import com.example.cartbutler.components.formatCurrency
+import com.example.cartbutler.network.networkModels.Cart
 
 @Composable
 fun CartScreen(cartViewModel: CartViewModel, navController: NavController) {
@@ -59,7 +60,6 @@ fun CartScreen(cartViewModel: CartViewModel, navController: NavController) {
                 loading -> {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
-
                 error != null -> {
                     Text(
                         text = error,
@@ -67,11 +67,9 @@ fun CartScreen(cartViewModel: CartViewModel, navController: NavController) {
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
-
                 cart == null || cart.cartItems.isEmpty() -> {
                     EmptyCartMessage()
                 }
-
                 else -> {
                     LazyColumn(
                         modifier = Modifier
@@ -94,7 +92,7 @@ fun CartScreen(cartViewModel: CartViewModel, navController: NavController) {
                 }
             }
 
-            CheckoutButton(navController)
+            CheckoutButton(navController, cart)
         }
     }
 }
@@ -122,9 +120,13 @@ private fun HeaderTitle() {
 }
 
 @Composable
-private fun BoxScope.CheckoutButton(navController: NavController) {
+private fun BoxScope.CheckoutButton(navController: NavController, cart: Cart?) {
     FilledTonalButton(
-        onClick = { navController.navigate("storeResults") },
+        onClick = {
+            if (cart?.cartItems?.isNotEmpty() == true) {
+                navController.navigate("storeResults")
+            }
+        },
         modifier = Modifier
             .align(Alignment.BottomCenter)
             .fillMaxWidth()

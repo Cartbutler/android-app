@@ -53,9 +53,9 @@ fun StoreResultsScreen(cartViewModel: CartViewModel, navController: NavControlle
         Box(modifier = Modifier.fillMaxSize()) {
             when {
                 loading -> CircularProgressIndicator(Modifier.align(Alignment.Center))
-                error != null -> Text(
-                    text = error,
-                    color = MaterialTheme.colorScheme.error,
+                error != null -> Text(error)
+                storeResults.isEmpty() -> Text(
+                    text = "Add items to your cart to see store results",
                     modifier = Modifier.align(Alignment.Center)
                 )
                 storeResults.isEmpty() -> Text(

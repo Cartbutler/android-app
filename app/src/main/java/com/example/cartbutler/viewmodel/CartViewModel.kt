@@ -1,5 +1,6 @@
 package com.example.cartbutler.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -146,8 +147,14 @@ class CartViewModel(
                 _loading.value = true
                 val cart = repository.getCart()
                 _cart.value = cart
+                Log.d("CartViewModel", "CartID: ${cart.id}, Items: ${cart.cartItems.size}")
                 _cartItemsCount.value = cart.cartItems.size
-                loadShoppingResults(cart.id)
+
+                if (cart.cartItems.isNotEmpty()) {
+                    loadShoppingResults(cart.id)
+                } else {
+                    _storeResults.value = emptyList()
+                }
             } catch (e: Exception) {
                 _error.value = "Error refreshing cart: ${e.message}"
             } finally {
