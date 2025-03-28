@@ -57,11 +57,15 @@ fun StoreCartScreen(
         Box(modifier = Modifier.fillMaxSize()) {
             when {
                 loading -> CircularProgressIndicator(Modifier.align(Alignment.Center))
-                error != null -> Text(
-                    text = error!!,
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.align(Alignment.Center)
-                )
+                error != null -> {
+                    error?.let { errorMessage ->
+                        Text(
+                            text = errorMessage,
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
+                }
                 storeDetails == null -> Text(
                     text = stringResource(R.string.store_not_found),
                     modifier = Modifier.align(Alignment.Center)
@@ -143,7 +147,7 @@ fun StoreCartScreen(
                 }
             }
 
-            if (storeDetails != null) {
+            storeDetails?.let { details ->
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
