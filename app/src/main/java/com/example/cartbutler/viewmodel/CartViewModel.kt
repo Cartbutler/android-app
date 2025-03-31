@@ -1,10 +1,14 @@
 package com.example.cartbutler.viewmodel
 
+import android.util.Log
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cartbutler.network.networkModels.Cart
-import com.example.cartbutler.network.networkModels.StoreWithTotals
+import com.example.cartbutler.network.networkModels.ShoppingResultsResponse
 import com.example.cartbutler.network.networkModels.Store
+import com.example.cartbutler.network.networkModels.StoreWithTotals
 import com.example.cartbutler.repositories.CartRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -35,6 +39,11 @@ class CartViewModel(
 
     private val _cartItemsCount = MutableStateFlow(0)
     val cartItemsCount: StateFlow<Int> = _cartItemsCount.asStateFlow()
+
+    val _selectedStoreProducts = mutableStateOf<ShoppingResultsResponse?>(null)
+    val selectedStoreProducts: State<ShoppingResultsResponse?> = _selectedStoreProducts
+
+    val _shoppingResultsResponses = MutableStateFlow<List<ShoppingResultsResponse>>(emptyList())
 
     private val debounceJobs = mutableMapOf<Int, Job>()
 
@@ -140,8 +149,14 @@ class CartViewModel(
                 _loading.value = true
                 val cart = repository.getCart()
                 _cart.value = cart
+                Log.d("CartViewModel", "CartID: ${cart.id}, Items: ${cart.cartItems.size}")
                 _cartItemsCount.value = cart.cartItems.size
-                loadShoppingResults(cart.id)
+
+                if (cart.cartItems.isNotEmpty()) {
+                    loadShoppingResults(cart.id)
+                } else {
+                    _storeResults.value = emptyList()
+                }
             } catch (e: Exception) {
                 _error.value = "Error refreshing cart: ${e.message}"
             } finally {
@@ -153,6 +168,7 @@ class CartViewModel(
     private suspend fun loadShoppingResults(cartId: Int) {
         try {
             val results = repository.getShoppingResults(cartId)
+            _shoppingResultsResponses.value = results
             _storeResults.value = results.map { response ->
                 StoreWithTotals(
                     store = Store(

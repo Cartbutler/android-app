@@ -70,14 +70,22 @@ class CartRepository(
     }
 
     suspend fun getShoppingResults(cartId: Int): List<ShoppingResultsResponse> {
+        if (cartId == 0) return emptyList()
+
         try {
             val userId = sessionManager.getSessionId()
+            Log.d("CartRepository", "CartID: $cartId, UserID: $userId")
             return apiService.getShoppingResults(cartId, userId)
 
         } catch (e: HttpException) {
-            val errorMsg = "HTTP error ${e.code()} - ${e.response()?.errorBody()?.string()}"
-            Log.e("CartRepository", errorMsg, e)
-            throw Exception("Error fetching results: ${e.message}")
+            val errorBody = e.response()?.errorBody()?.string() ?: "No error body"
+            Log.e("CartRepository", """
+             HTTP Error ${e.code()}
+             URL: ${e.response()?.raw()?.request?.url}
+             Body: $errorBody
+        """.trimIndent())
+
+            throw Exception("Fail to search cart: ${e.message}")
 
         } catch (e: IOException) {
             Log.e("CartRepository", "Network error: ${e.message}", e)
