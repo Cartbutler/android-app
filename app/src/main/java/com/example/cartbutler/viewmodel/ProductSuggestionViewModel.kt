@@ -3,6 +3,7 @@ package com.example.cartbutler.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cartbutler.network.ApiService
+import com.example.cartbutler.network.RetrofitInstance
 import com.example.cartbutler.network.networkModels.ProductSuggestion
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -10,13 +11,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class ProductSuggestionViewModel(
-    private val apiService: ApiService
-) : ViewModel() {
-
+class ProductSuggestionViewModel : ViewModel() {
     private val _suggestions = MutableStateFlow<List<ProductSuggestion>>(emptyList())
     val suggestions = _suggestions.asStateFlow()
-
+    private val apiService = RetrofitInstance.api
     private var searchJob: Job? = null
 
     fun fetchSuggestions(query: String) {
