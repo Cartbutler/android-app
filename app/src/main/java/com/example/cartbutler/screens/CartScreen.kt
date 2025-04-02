@@ -105,7 +105,7 @@ private fun HeaderTitle() {
             .padding(horizontal = 24.dp)
     ) {
         Text(
-            text = "Your Cart",
+            text = stringResource(R.string.your_cart),
             style = MaterialTheme.typography.headlineMedium.copy(
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary

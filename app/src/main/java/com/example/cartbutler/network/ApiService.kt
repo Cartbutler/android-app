@@ -43,7 +43,8 @@ interface ApiService {
     // Return cart for user
     @GET("cart")
     suspend fun getCart(
-        @Query("user_id") userId: String
+        @Query("user_id") userId: String,
+        @Query("language_id") languageId: String
     ): Cart
 
     // Add product to cart
@@ -56,6 +57,7 @@ interface ApiService {
     @GET("shopping-results")
     suspend fun getShoppingResults(
         @Query("cart_id") cartId: Int,
-        @Query("user_id") userId: String
+        @Query("user_id") userId: String,
+        @Query("language_id") languageId: String
     ): List<ShoppingResultsResponse>
 }

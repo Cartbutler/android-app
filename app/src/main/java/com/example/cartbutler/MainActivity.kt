@@ -35,8 +35,8 @@ class MainActivity : ComponentActivity() {
             CartbutlerTheme {
                 val navController = rememberNavController()
                 val sessionManager = SessionManager(this@MainActivity)
-                val cartRepository = CartRepository(RetrofitInstance.api, sessionManager)
-                val cartViewModel = remember { CartViewModel(cartRepository) }
+                val cartRepository = CartRepository(RetrofitInstance.api, sessionManager, this@MainActivity)
+                val cartViewModel = remember { CartViewModel(cartRepository, this@MainActivity) }
 
                 Scaffold(
                     bottomBar = {

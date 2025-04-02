@@ -33,4 +33,5 @@
     <string name="estimated_total">Total:</string>
     <string name="your_products">Seus Produtos</string>
     <string name="quantity">Quantidade: %d</string>
+    <string name="your_cart">Seu Carrinho</string>
 </resources>
