@@ -42,6 +42,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import coil.compose.rememberAsyncImagePainter
 import com.example.cartbutler.network.networkModels.ShoppingResultsResponse
 import androidx.compose.foundation.layout.wrapContentSize
+import com.example.cartbutler.components.StoreMap
 
 @Composable
 fun StoreCartScreen(
@@ -70,7 +71,7 @@ fun StoreCartScreen(
 private fun StoreMainContent(storeDetails: ShoppingResultsResponse) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(top = 72.dp)
+        contentPadding = PaddingValues(top = 72.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
     ) {
         item {
             StoreHeaderSection(
@@ -83,8 +84,48 @@ private fun StoreMainContent(storeDetails: ShoppingResultsResponse) {
         items(storeDetails.products) { product ->
             ProductItem(
                 product = product,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                modifier = Modifier.padding(vertical = 8.dp)
             )
+        }
+
+        if (storeDetails.latitude != null && storeDetails.longitude != null) {
+            item {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    elevation = CardDefaults.cardElevation(8.dp)
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(
+                            text = stringResource(R.string.location),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                                .clip(RoundedCornerShape(16.dp))
+                        ) {
+                            StoreMap(
+                                latitude = storeDetails.latitude,
+                                longitude = storeDetails.longitude,
+                                storeName = storeDetails.storeName
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            text = storeDetails.storeAddress ?: "",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -109,7 +150,7 @@ private fun StoreHeaderSection(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(vertical = 16.dp),
             elevation = CardDefaults.cardElevation(8.dp),
             shape = RoundedCornerShape(16.dp)
         ) {
@@ -152,7 +193,7 @@ private fun StoreHeaderSection(
         Text(
             text = stringResource(R.string.your_products),
             style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.padding(horizontal = 16.dp),
+            modifier = Modifier.padding(bottom = 16.dp),
             fontWeight = FontWeight.Bold
         )
     }

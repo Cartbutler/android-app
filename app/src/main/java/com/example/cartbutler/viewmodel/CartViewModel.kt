@@ -180,6 +180,9 @@ class CartViewModel(
                         storeId = response.storeId,
                         storeName = response.storeName,
                         storeLocation = response.storeLocation,
+                        storeAddress = response.storeAddress,
+                        latitude = response.latitude,
+                        longitude = response.longitude,
                         price = response.total.toString(),
                         stock = null,
                         storeImage = response.storeImage
