@@ -42,7 +42,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import coil.compose.rememberAsyncImagePainter
 import com.example.cartbutler.network.networkModels.ShoppingResultsResponse
 import androidx.compose.foundation.layout.wrapContentSize
-import com.example.cartbutler.components.StoreMap
+import com.example.cartbutler.components.StoreLocationSection
 
 @Composable
 fun StoreCartScreen(
@@ -90,41 +90,12 @@ private fun StoreMainContent(storeDetails: ShoppingResultsResponse) {
 
         if (storeDetails.latitude != null && storeDetails.longitude != null) {
             item {
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    elevation = CardDefaults.cardElevation(8.dp)
-                ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Text(
-                            text = stringResource(R.string.location),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(200.dp)
-                                .clip(RoundedCornerShape(16.dp))
-                        ) {
-                            StoreMap(
-                                latitude = storeDetails.latitude,
-                                longitude = storeDetails.longitude,
-                                storeName = storeDetails.storeName
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Text(
-                            text = storeDetails.storeAddress ?: "",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-                        )
-                    }
-                }
+                StoreLocationSection(
+                    latitude = storeDetails.latitude,
+                    longitude = storeDetails.longitude,
+                    storeName = storeDetails.storeName,
+                    storeAddress = storeDetails.storeAddress
+                )
             }
         }
     }
