@@ -1,7 +1,9 @@
 package com.example.cartbutler.repositories
 
+import android.content.Context
 import android.util.Log
 import com.example.cartbutler.network.ApiService
+import com.example.cartbutler.network.LocaleHelper
 import com.example.cartbutler.network.SessionManager
 import com.example.cartbutler.network.networkModels.Cart
 import com.example.cartbutler.network.networkModels.AddToCartRequest
@@ -11,7 +13,8 @@ import java.io.IOException
 
 class CartRepository(
     private val apiService: ApiService,
-    private val sessionManager: SessionManager
+    private val sessionManager: SessionManager,
+    private val context: Context
 ) {
     suspend fun addToCart(productId: Int, quantity: Int): Cart {
         try {
@@ -52,7 +55,7 @@ class CartRepository(
                 Log.d("CartRepository", "SessionID: $it")
             }
 
-            return apiService.getCart(userId)
+            return apiService.getCart(userId, languageId = LocaleHelper.currentLanguage(context))
 
         } catch (e: HttpException) {
             val errorMsg = "HTTP error ${e.code()} - ${e.response()?.errorBody()?.string()}"
@@ -75,7 +78,8 @@ class CartRepository(
         try {
             val userId = sessionManager.getSessionId()
             Log.d("CartRepository", "CartID: $cartId, UserID: $userId")
-            return apiService.getShoppingResults(cartId, userId)
+            return apiService.getShoppingResults(cartId, userId,
+                languageId = LocaleHelper.currentLanguage(context))
 
         } catch (e: HttpException) {
             val errorBody = e.response()?.errorBody()?.string() ?: "No error body"

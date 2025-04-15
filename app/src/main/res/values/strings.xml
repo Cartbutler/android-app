@@ -32,4 +32,6 @@
     <string name="estimated_total">Total:</string>
     <string name="your_products">Your Products</string>
     <string name="quantity">Quantity: %d</string>
+    <string name="your_cart">Your Cart</string>
+    <string name="location">Store Location</string>
 </resources>

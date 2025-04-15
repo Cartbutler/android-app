@@ -42,6 +42,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import coil.compose.rememberAsyncImagePainter
 import com.example.cartbutler.network.networkModels.ShoppingResultsResponse
 import androidx.compose.foundation.layout.wrapContentSize
+import com.example.cartbutler.components.StoreLocationSection
 
 @Composable
 fun StoreCartScreen(
@@ -70,7 +71,7 @@ fun StoreCartScreen(
 private fun StoreMainContent(storeDetails: ShoppingResultsResponse) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(top = 72.dp)
+        contentPadding = PaddingValues(top = 72.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
     ) {
         item {
             StoreHeaderSection(
@@ -83,8 +84,19 @@ private fun StoreMainContent(storeDetails: ShoppingResultsResponse) {
         items(storeDetails.products) { product ->
             ProductItem(
                 product = product,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                modifier = Modifier.padding(vertical = 8.dp)
             )
+        }
+
+        if (storeDetails.latitude != null && storeDetails.longitude != null) {
+            item {
+                StoreLocationSection(
+                    latitude = storeDetails.latitude,
+                    longitude = storeDetails.longitude,
+                    storeName = storeDetails.storeName,
+                    storeAddress = storeDetails.storeAddress
+                )
+            }
         }
     }
 }
@@ -109,7 +121,7 @@ private fun StoreHeaderSection(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(vertical = 16.dp),
             elevation = CardDefaults.cardElevation(8.dp),
             shape = RoundedCornerShape(16.dp)
         ) {
@@ -152,7 +164,7 @@ private fun StoreHeaderSection(
         Text(
             text = stringResource(R.string.your_products),
             style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.padding(horizontal = 16.dp),
+            modifier = Modifier.padding(bottom = 16.dp),
             fontWeight = FontWeight.Bold
         )
     }

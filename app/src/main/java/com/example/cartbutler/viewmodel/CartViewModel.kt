@@ -1,5 +1,6 @@
 package com.example.cartbutler.viewmodel
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -17,10 +18,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import com.example.cartbutler.network.LocaleHelper
 
 class CartViewModel(
-    private val repository: CartRepository
+    private val repository: CartRepository,
+    private val context: Context
 ) : ViewModel() {
+
+    private val _currentLanguage = mutableStateOf(LocaleHelper.currentLanguage(context))
 
     private val _cart = MutableStateFlow<Cart?>(null)
     val cart: StateFlow<Cart?> = _cart.asStateFlow()
@@ -175,6 +180,9 @@ class CartViewModel(
                         storeId = response.storeId,
                         storeName = response.storeName,
                         storeLocation = response.storeLocation,
+                        storeAddress = response.storeAddress,
+                        latitude = response.latitude,
+                        longitude = response.longitude,
                         price = response.total.toString(),
                         stock = null,
                         storeImage = response.storeImage

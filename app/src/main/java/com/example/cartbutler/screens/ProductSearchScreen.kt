@@ -21,6 +21,7 @@ import com.example.cartbutler.components.formatCurrency
 import com.example.cartbutler.viewmodel.ProductSearchViewModel
 import androidx.compose.runtime.collectAsState
 import androidx.compose.material.icons.Icons
+import androidx.compose.ui.platform.LocalContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,15 +31,16 @@ fun ProductSearchScreen(
     categoryId: Int?,
     passedCategoryName: String?
 ) {
+    val context = LocalContext.current
     val viewModel: ProductSearchViewModel = viewModel(
         key = "search_${searchQuery}_category_${categoryId}"
     )
 
     LaunchedEffect(key1 = searchQuery, key2 = categoryId) {
         when {
-            searchQuery != null -> viewModel.loadProductsByQuery(searchQuery)
+            searchQuery != null -> viewModel.loadProductsByQuery(searchQuery, context)
             categoryId != null && passedCategoryName != null ->
-                viewModel.loadProductsByCategory(categoryId, passedCategoryName)
+                viewModel.loadProductsByCategory(categoryId, passedCategoryName, context)
         }
     }
 
@@ -88,7 +90,7 @@ fun ProductSearchScreen(
                             color = MaterialTheme.colorScheme.error
                         )
                         Button(
-                            onClick = { viewModel.retry() },
+                            onClick = { viewModel.retry(context) },
                             modifier = Modifier.padding(top = 8.dp)
                         ) {
                             Text(stringResource(R.string.retry))

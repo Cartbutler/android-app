@@ -1,8 +1,10 @@
 package com.example.cartbutler.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cartbutler.network.ApiService
+import com.example.cartbutler.network.LocaleHelper
 import com.example.cartbutler.network.networkModels.Product
 import com.example.cartbutler.network.RetrofitInstance
 import kotlinx.coroutines.Job
@@ -34,7 +36,7 @@ class ProductSearchViewModel(
     private var lastCategoryId: Int? = null
     private var lastCategoryName: String? = null
 
-    fun loadProductsByQuery(query: String) {
+    fun loadProductsByQuery(query: String, context : Context) {
         lastQuery = query
         lastCategoryId = null
         lastCategoryName = null
@@ -48,7 +50,8 @@ class ProductSearchViewModel(
             _products.value = emptyList()
 
             try {
-                val response = apiService.searchProducts(query, null)
+                val languageId = LocaleHelper.currentLanguage(context)
+                val response = apiService.searchProducts(query, null, languageId = languageId)
                 _products.value = response
                 _searchQuery.value = query
             } catch (e: Exception) {
@@ -59,7 +62,7 @@ class ProductSearchViewModel(
         }
     }
 
-    fun loadProductsByCategory(categoryId: Int, categoryName: String) {
+    fun loadProductsByCategory(categoryId: Int, categoryName: String, context: Context) {
         lastCategoryId = categoryId
         lastCategoryName = categoryName
         lastQuery = null
@@ -72,7 +75,8 @@ class ProductSearchViewModel(
             _products.value = emptyList()
 
             try {
-                val response = apiService.searchProducts(null, categoryId)
+                val languageId = LocaleHelper.currentLanguage(context)
+                val response = apiService.searchProducts(null, categoryId, languageId = languageId)
                 _products.value = response
                 _categoryName.value = categoryName
             } catch (e: Exception) {
@@ -83,11 +87,11 @@ class ProductSearchViewModel(
         }
     }
 
-    fun retry() {
+    fun retry(context: Context) {
         when {
-            lastQuery != null -> loadProductsByQuery(lastQuery!!)
+            lastQuery != null -> loadProductsByQuery(lastQuery!!, context)
             lastCategoryId != null && lastCategoryName != null ->
-                loadProductsByCategory(lastCategoryId!!, lastCategoryName!!)
+                loadProductsByCategory(lastCategoryId!!, lastCategoryName!!, context)
         }
     }
 }
